@@ -1,4 +1,4 @@
-package edu.cu.cs.webxsql;
+package edu.cu.cs.Sombra.Test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

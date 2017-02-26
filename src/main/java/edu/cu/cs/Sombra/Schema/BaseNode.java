@@ -1,4 +1,4 @@
-package edu.cu.cs.Sombra.Node;
+package edu.cu.cs.Sombra.Schema;
 
 public abstract class BaseNode {
 	public String name;
