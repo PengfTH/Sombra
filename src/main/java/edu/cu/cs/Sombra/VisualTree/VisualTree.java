@@ -106,7 +106,7 @@ public class VisualTree extends BaseTreeNode {
 		sb.append("Tree: ");
 		sb.append(this.url);
 		sb.append("\n");
-		for (BaseTreeNode node : this.children()) {
+		for (BaseTreeNode node : this.getChildren()) {
 			sb.append("\t");
 			sb.append(node);
 			sb.append("\n");

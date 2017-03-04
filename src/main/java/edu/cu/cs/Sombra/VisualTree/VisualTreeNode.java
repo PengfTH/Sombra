@@ -220,7 +220,7 @@ public class VisualTreeNode extends BaseTreeNode {
 			sb.append(this.src);
 		}
 		sb.append("\n");
-		for (BaseTreeNode node : this.children()) {
+		for (BaseTreeNode node : this.getChildren()) {
 			for (int i = 0; i < this.getDepth(); i++) {
 				sb.append("\t");
 			}

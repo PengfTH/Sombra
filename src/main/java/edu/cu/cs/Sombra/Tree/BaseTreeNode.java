@@ -8,13 +8,22 @@ public abstract class BaseTreeNode {
 	private BaseTreeNode parent;
 	private int depth;
 	private List<BaseTreeNode> children;
-	private List<BaseTreeNode> siblings;
 	
 	public BaseTreeNode(BaseTreeNode parent, int depth) {
 		this.depth = depth;
 		this.parent = parent;	
 		this.children = new ArrayList<BaseTreeNode>();
-		this.siblings = new ArrayList<BaseTreeNode>();
+	}
+	
+	public BaseTreeNode(BaseTreeNode parent) {
+		if (parent == null) {
+			this.depth = 0;
+		} else{
+			this.depth = parent.getDepth() + 1;
+		
+		}
+		this.parent = parent;	
+		this.children = new ArrayList<BaseTreeNode>();
 	}
 	
 	public int getDepth() {
@@ -25,7 +34,7 @@ public abstract class BaseTreeNode {
 		return this.parent;
 	}
 	
-	public List<BaseTreeNode> children(){
+	public List<BaseTreeNode> getChildren(){
 		return this.children;
 	}
 	
@@ -34,16 +43,22 @@ public abstract class BaseTreeNode {
 	}
 	
 	public List<BaseTreeNode> getSiblings() {
-		return this.siblings;
+		if (this.parent == null) {
+			return null;
+		}
+		ArrayList<BaseTreeNode> siblings = new ArrayList<BaseTreeNode>(this.parent.getParent().getChildren());
+		siblings.remove(this);
+		return siblings;
 	}
 	
 	public int getSiblingsNum() {
-		return this.siblings.size();
+		return this.getSiblings().size();
 	}
 	
 	public void addChild(BaseTreeNode child) {
 		this.children.add(child);
 	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
