@@ -37,6 +37,17 @@ public class DomTreeNode extends BaseTreeNode {
 		return this.tagPath;
 	}
 	
+	public String getTagPathString() {
+		String path = "";
+		if (this.tagPath.size() != 0) {
+			path += this.tagPath.get(0);
+			for (int i=1; i<this.tagPath.size(); i++) {
+				path += "/" + this.tagPath.get(i);
+			}
+		}	
+		return path;
+	}
+	
 	public String getContent() {
 		return this.content;
 	}
@@ -45,7 +56,7 @@ public class DomTreeNode extends BaseTreeNode {
 		System.out.println("tag: " + this.tag);
 		System.out.println("id: " + this.id);
 		System.out.println("class: " + this.classname);
-		System.out.println("tag path: " + this.tagPath);
+		System.out.println("tag path: " + this.getTagPathString());
 		System.out.println();		
 	}
 	

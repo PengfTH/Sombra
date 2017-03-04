@@ -18,7 +18,6 @@ public class DomTree {
 			Document doc = Jsoup.parse(input, "UTF-8");
 			this.title = doc.title();
 			Element cur = doc.body();
-			//System.out.println(doc.body().child(1).children());
 			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html(), cur.toString());
 			this.addChildrenNode(this.root, cur);
 
