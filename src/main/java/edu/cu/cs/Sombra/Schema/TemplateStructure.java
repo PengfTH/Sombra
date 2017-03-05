@@ -18,8 +18,8 @@ public class TemplateStructure {
 
 	
 	public void pageAlign(String url1,String v1, String url2, String v2){
-		PageStructure page1 = new PageStructure(url1, v1);
-		PageStructure page2 = new PageStructure(url2, v2);
+		PageStructure page1 = new PageStructure(url1);
+		PageStructure page2 = new PageStructure(url2);
 		DomTree domT1 = page1.getDomTree();
 		DomTree domT2 = page2.getDomTree();
 		Set<DomTreeNode> goodNodes1 = domT1.getGoodNodes();

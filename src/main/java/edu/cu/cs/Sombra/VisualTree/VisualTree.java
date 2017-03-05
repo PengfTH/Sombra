@@ -1,4 +1,6 @@
 package edu.cu.cs.Sombra.VisualTree;
+import org.fit.vips.Vips;
+
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 
 public class VisualTree extends BaseTreeNode {
@@ -29,6 +31,29 @@ public class VisualTree extends BaseTreeNode {
 		this.url = "";
 	}
 	
+	public static VisualTree getVisualTree(String filename) {
+		String outputFilename = "VT_" + filename;
+		try
+		{
+			Vips vips = new Vips();
+			vips.setOutputFileName(outputFilename);
+			// disable graphics output
+			vips.enableGraphicsOutput(false);
+			// disable output to separate folder (no necessary, it's default value is false)
+			vips.enableOutputToFolder(false);
+			// set permitted degree of coherence
+			vips.setPredefinedDoC(8);
+			// start segmentation on page
+			vips.startSegmentation(filename);
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		VisualTreeParser parser = new VisualTreeParser();
+		return parser.parse(outputFilename+".xml");
+		
+	}
 	public void setPageRectHeight(int value) {
 		this.pageRectHeight = value;
 	}
