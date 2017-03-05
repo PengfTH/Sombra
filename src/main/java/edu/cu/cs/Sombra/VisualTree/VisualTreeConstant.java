@@ -33,5 +33,6 @@ public class VisualTreeConstant {
 	public final static String ATTR_VISUALTREENODE_ORDER	  = "order";
 	public final static String ATTR_VISUALTREENODE_SOURCEINDEX= "SourceIndex";
 	public final static String ATTR_VISUALTREENODE_SRC		  = "SRC";
+	public final static String ATTR_VISUALTREENODE_SOMBRAID   = "sombraid";
 	
 }

@@ -21,6 +21,8 @@ public class VisualTreeNode extends BaseTreeNode {
 	private int rectWidth;
 	private int rectHeight;
 	
+	private int[] sombraids;
+	
 	private String ID;
 	private int order;
 	
@@ -205,6 +207,19 @@ public class VisualTreeNode extends BaseTreeNode {
 	
 	public String getSRC() {
 		return this.src;
+	}
+	
+	public void setSombraIds(String value) {
+		String[] temp = value.split("####");
+		int[] ids = new int[temp.length - 1];
+		for (int i = 0; i < temp.length - 1; i++) {
+			ids[i] = Integer.parseInt(temp[i]);
+		}
+		this.sombraids = ids;
+	}
+	
+	public int[] getSombraIds() {
+		return this.sombraids;
 	}
 	
 	@Override
