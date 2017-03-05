@@ -86,6 +86,7 @@ public class VisualTreeParser {
 		vnode.setRectWidth(Integer.parseInt(element.getAttribute(VisualTreeConstant.ATTR_VISUALTREENODE_RECTWIDTH)));
 		vnode.setTextLength(Integer.parseInt(element.getAttribute(VisualTreeConstant.ATTR_VISUALTREENODE_TEXTLEN)));
 		vnode.setSRC(element.getAttribute(VisualTreeConstant.ATTR_VISUALTREENODE_SRC));
+		vnode.setSombraIds(element.getAttribute(VisualTreeConstant.ATTR_VISUALTREENODE_SOMBRAID));
 		
 		NodeList children = node.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {

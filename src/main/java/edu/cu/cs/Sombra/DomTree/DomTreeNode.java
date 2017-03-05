@@ -9,9 +9,13 @@ public class DomTreeNode extends BaseTreeNode {
 
 	private String tag;
 	private String id;
+	private int sombraid;
 	private String classname;
 	private List<String> tagPath;
 	private String src;
+	
+	private String vPath;
+	private int vWeight;
 	
 	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String src) {
 		super(parent);
@@ -25,6 +29,30 @@ public class DomTreeNode extends BaseTreeNode {
 		}
 		this.tagPath.add(tag);
 		this.src = src;
+	}
+	
+	public void setSombraid(int i) {
+		this.sombraid = i;
+	}
+	
+	public int getSombraid() {
+		return this.sombraid;
+	}
+	
+	public void setVPath(String p) {
+		this.vPath = p;
+	}
+	
+	public String getVPath() {
+		return this.vPath;
+	}
+	
+	public void setVWeight(int w) {
+		this.vWeight = w;
+	}
+	
+	public int getVWeight() {
+		return this.vWeight;
 	}
 	
 	public String getTag(){
@@ -51,10 +79,13 @@ public class DomTreeNode extends BaseTreeNode {
 	}
 	
 	public void print() {
+		if (this.vWeight == 0) return;
 		System.out.println("tag: " + this.tag);
 		System.out.println("id: " + this.id);
 		System.out.println("class: " + this.classname);
-		System.out.println("content: " + this.getSRC());
+		System.out.println("sombraid: " + this.getSombraid());
+		System.out.println("vPath: " + this.getVPath());
+		System.out.println("vWeight: " + this.getVWeight());
 		System.out.println();		
 	}
 	

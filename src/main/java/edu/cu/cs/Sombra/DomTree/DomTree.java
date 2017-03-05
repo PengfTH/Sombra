@@ -42,7 +42,9 @@ public class DomTree {
 	}
 
 	private void addChildrenNode(DomTreeNode curnode, Element cur) {
-		cur.attr("sombraid", Integer.toString(this.nodenum++));
+		cur.attr("sombraid", Integer.toString(this.nodenum));
+		curnode.setSombraid(this.nodenum);
+		this.nodenum ++;
 		if (cur.children() == null || cur.children().size() == 0) { 	
 			return;
 		}
@@ -67,7 +69,7 @@ public class DomTree {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DomTree domtree = new DomTree("login.html");
+		DomTree domtree = new DomTree("amazon.html");
 		//domtree.traverse();
 		//for (BaseTreeNode node : domtree.root.getLeafNodes()) {
 			//((DomTreeNode)node).print();

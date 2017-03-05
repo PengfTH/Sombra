@@ -1,5 +1,8 @@
 package edu.cu.cs.Sombra.VisualTree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 
 public class VisualTreeNode extends BaseTreeNode {
@@ -21,7 +24,7 @@ public class VisualTreeNode extends BaseTreeNode {
 	private int rectWidth;
 	private int rectHeight;
 	
-	private int[] sombraids;
+	private List<Integer> sombraids;
 	
 	private String ID;
 	private int order;
@@ -211,14 +214,16 @@ public class VisualTreeNode extends BaseTreeNode {
 	
 	public void setSombraIds(String value) {
 		String[] temp = value.split("####");
-		int[] ids = new int[temp.length - 1];
-		for (int i = 0; i < temp.length - 1; i++) {
-			ids[i] = Integer.parseInt(temp[i]);
+		List<Integer> ids = new ArrayList<Integer>();
+		for (int i = 0; i < temp.length; i++) {
+			if (!temp[i].isEmpty()) {
+				ids.add(Integer.parseInt(temp[i]));
+			}
 		}
 		this.sombraids = ids;
 	}
 	
-	public int[] getSombraIds() {
+	public List<Integer> getSombraIds() {
 		return this.sombraids;
 	}
 	
