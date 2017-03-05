@@ -22,10 +22,10 @@ public class PageStructure {
 		this.DomTree = new DomTree(htmlfile);
 		VisualTreeParser parser = new VisualTreeParser();
 		this.VTree = parser.parse(vfile);
-		this.align();
+		this.treeAlign();
 	}
 	
-	private void align() {
+	private void treeAlign() {
 		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
 		for (BaseTreeNode vNode : vLeafNodes) {
@@ -43,7 +43,7 @@ public class PageStructure {
 				if (list.contains(sombraid)) {
 					((DomTreeNode) domNode).setVPath(((VisualTreeNode)vNode).getID());
 					((DomTreeNode) domNode).setVWeight(((VisualTreeNode)vNode).getRectHeight() * ((VisualTreeNode)vNode).getRectWidth());
-					//this.D2V.put((DomTreeNode) domNode, (VisualTreeNode) vNode);
+					this.DomTree.addGoodNodes((DomTreeNode) domNode);
 					break;
 				}
 			}
