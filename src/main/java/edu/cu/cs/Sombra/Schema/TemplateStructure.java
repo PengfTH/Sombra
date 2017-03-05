@@ -17,7 +17,7 @@ public class TemplateStructure {
 	private Levenshtein leven = new Levenshtein();
 
 	
-	public void pageAlign(String url1,String v1, String url2, String v2){
+	public void pageAlign(String url1, String url2){
 		PageStructure page1 = new PageStructure(url1);
 		PageStructure page2 = new PageStructure(url2);
 		DomTree domT1 = page1.getDomTree();
@@ -69,7 +69,7 @@ public class TemplateStructure {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
-		test.pageAlign("amazon.html", "VIPSResult.xml", "amazon2.html", "VIPSResult2.xml");
+		test.pageAlign("amazon.html", "amazon2.html");
 
 	}
 

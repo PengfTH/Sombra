@@ -17,7 +17,7 @@ public class PageStructure {
 	
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
-		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile);
+		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile, true);
 		this.treeAlign();
 	}
 	
