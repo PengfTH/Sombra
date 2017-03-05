@@ -28,14 +28,6 @@ public class PageStructure {
 	private void treeAlign() {
 		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
-		for (BaseTreeNode vNode : vLeafNodes) {
-			List<Integer> list = ((VisualTreeNode) vNode).getSombraIds();
-			for (Integer i : list) {
-				System.out.print(i + " ");
-			}
-			System.out.print("\n");
-		}
-		int count = 0;
 		for (BaseTreeNode domNode : domLeafNodes) {
 			int sombraid = ((DomTreeNode) domNode).getSombraid();
 			for (BaseTreeNode vNode : vLeafNodes) {
