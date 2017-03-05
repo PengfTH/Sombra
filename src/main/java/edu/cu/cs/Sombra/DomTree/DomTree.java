@@ -1,6 +1,7 @@
 package edu.cu.cs.Sombra.DomTree;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -16,13 +17,22 @@ public class DomTree {
 	private String title;
 
 	public DomTree(String filename) {
-		File input = new File(filename);
+		
 		try {
+			File input = new File(filename);
+			File output = new File("modified_" + filename);
+			PrintWriter writer = new PrintWriter(output,"UTF-8");
+			
 			Document doc = Jsoup.parse(input, "UTF-8");
 			this.title = doc.title();
 			Element cur = doc.body();
 			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html().toString().replaceAll("<br>", "").replaceAll("</br>", "").replaceAll("&nbsp;",""));
+			this.nodenum = 0;
 			this.addChildrenNode(this.root, cur);
+			
+			writer.write(doc.html()) ;
+			writer.flush();
+			writer.close();
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -32,6 +42,7 @@ public class DomTree {
 	}
 
 	private void addChildrenNode(DomTreeNode curnode, Element cur) {
+		cur.attr("sombraid", Integer.toString(this.nodenum++));
 		if (cur.children() == null || cur.children().size() == 0) { 	
 			return;
 		}
@@ -58,9 +69,9 @@ public class DomTree {
 		// TODO Auto-generated method stub
 		DomTree domtree = new DomTree("login.html");
 		//domtree.traverse();
-		for (BaseTreeNode node : domtree.root.getLeafNodes()) {
-			((DomTreeNode)node).print();
-		}
+		//for (BaseTreeNode node : domtree.root.getLeafNodes()) {
+			//((DomTreeNode)node).print();
+		//}
 
 	}
 

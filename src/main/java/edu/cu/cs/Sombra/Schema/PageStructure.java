@@ -17,19 +17,19 @@ public class PageStructure {
 	
 	private VisualTree VTree;
 	private DomTree DomTree;
-	private Map<VisualTreeNode, DomTreeNode> V2D;
+	private Map<DomTreeNode, VisualTreeNode> D2V;
 	
 	
 	public PageStructure(String htmlfile, String vfile) {
 		this.DomTree = new DomTree(htmlfile);
 		VisualTreeParser parser = new VisualTreeParser();
 		this.VTree = parser.parse(vfile);
-		this.V2D = new HashMap<VisualTreeNode, DomTreeNode>();
+		this.D2V = new HashMap<DomTreeNode, VisualTreeNode>();
 		this.align();
 	}
 	
 	private void align() {
-		List<BaseTreeNode> domLeafNodes = this.DomTree.getLeafNodes();
+		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
 		
 		for (BaseTreeNode n : domLeafNodes) {
@@ -41,28 +41,34 @@ public class PageStructure {
 		for (BaseTreeNode n : vLeafNodes) {
 			//System.out.println(((VisualTreeNode)n).getSRC().replaceAll("\\s", ""));
 		}		
-		
+		int count = 0;
 		for (BaseTreeNode vNode : vLeafNodes) {
-			String vSrc = ((VisualTreeNode)vNode).getSRC();
+			String[] vSrcs = ((VisualTreeNode)vNode).getSRC().replaceAll("\\s", "").split("####");
+			for (String s : vSrcs) {
+				System.out.println(s);
+			}
 			for (BaseTreeNode domNode : domLeafNodes) {
 				String dSrc = ((DomTreeNode)domNode).getSRC();
-				vSrc = vSrc.replaceAll("\\s", "");
 				dSrc = dSrc.replaceAll("\\s", "");
-				if (vSrc.equals(dSrc)) {
-					this.V2D.put((VisualTreeNode)vNode, (DomTreeNode)domNode);
+				for (String vSrc : vSrcs) {
+					if (dSrc.equals(vSrc)) {
+						this.D2V.put((DomTreeNode)domNode, (VisualTreeNode)vNode);
+						count++;
+					}
 				}
 			}
 		}		
+		System.out.println(count);
 	}
 	
-	public Map<VisualTreeNode, DomTreeNode> getV2D() {
-		return this.V2D;
+	public Map<DomTreeNode, VisualTreeNode> getD2V() {
+		return this.D2V;
 	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		PageStructure test = new PageStructure("amazon.html", "VIPSResult.xml");
-		System.out.println(test.getV2D().size());
+		System.out.println(test.getD2V().size());
 		/*for (VisualTreeNode vnode : test.getV2D().keySet()) {
 			System.out.println(vnode.getSRC());
 		}
