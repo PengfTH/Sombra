@@ -11,10 +11,9 @@ public class DomTreeNode extends BaseTreeNode {
 	private String id;
 	private String classname;
 	private List<String> tagPath;
-	private String content;
 	private String src;
 	
-	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String content, String src) {
+	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String src) {
 		super(parent);
 		// TODO Auto-generated constructor stub
 		this.tag = tag;
@@ -25,7 +24,6 @@ public class DomTreeNode extends BaseTreeNode {
 			this.tagPath.addAll(((DomTreeNode)this.getParent()).getTagPath());
 		}
 		this.tagPath.add(tag);
-		this.content = content;
 		this.src = src;
 	}
 	
@@ -48,15 +46,15 @@ public class DomTreeNode extends BaseTreeNode {
 		return path;
 	}
 	
-	public String getContent() {
-		return this.content;
+	public String getSRC() {
+		return this.src;
 	}
 	
 	public void print() {
 		System.out.println("tag: " + this.tag);
 		System.out.println("id: " + this.id);
 		System.out.println("class: " + this.classname);
-		System.out.println("tag path: " + this.getTagPathString());
+		System.out.println("content: " + this.getSRC());
 		System.out.println();		
 	}
 	
