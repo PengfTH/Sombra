@@ -21,7 +21,7 @@ public class DomTree {
 			Document doc = Jsoup.parse(input, "UTF-8");
 			this.title = doc.title();
 			Element cur = doc.body();
-			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html());
+			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html().toString().replaceAll("<br>", "").replaceAll("</br>", "").replaceAll("&nbsp;",""));
 			this.addChildrenNode(this.root, cur);
 
 		} catch (Exception e) {
@@ -36,7 +36,7 @@ public class DomTree {
 			return;
 		}
 		for (Element e : cur.children()) {
-			DomTreeNode tmpnode = new DomTreeNode(curnode, e.tagName(), e.id(), e.className(), e.html());
+			DomTreeNode tmpnode = new DomTreeNode(curnode, e.tagName(), e.id(), e.className(), e.html().toString().replaceAll("<br>", "").replaceAll("</br>", "").replaceAll("&nbsp;",""));
 			curnode.addChild((DomTreeNode)tmpnode);
 			this.addChildrenNode(tmpnode, e);
 		}

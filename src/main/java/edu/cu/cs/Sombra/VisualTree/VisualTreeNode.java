@@ -200,7 +200,7 @@ public class VisualTreeNode extends BaseTreeNode {
 	}
 	
 	public void setSRC(String value) {
-		this.src = value;
+		this.src = value.replaceAll("\u00a0", "");
 	}
 	
 	public String getSRC() {

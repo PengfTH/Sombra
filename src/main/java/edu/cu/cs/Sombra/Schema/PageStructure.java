@@ -29,7 +29,7 @@ public class PageStructure {
 	}
 	
 	private void align() {
-		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
+		List<BaseTreeNode> domLeafNodes = this.DomTree.getLeafNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
 		
 		for (BaseTreeNode n : domLeafNodes) {
