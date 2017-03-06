@@ -1,5 +1,6 @@
 package edu.cu.cs.Sombra.Schema;
 
+import java.util.Map;
 import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
@@ -9,12 +10,27 @@ import info.debatty.java.stringsimilarity.Levenshtein;
 public class TemplateStructure {
 	
 	public final double tagPathPara = 1;
-	public final double vPathPara = 3;
-	public final double vWeightPara = 5;
-	public final double contentPara = 5;
-	public final double simThreshold = (double) 5;
+	public final double vPathPara = 1;
+	public final double vWeightPara = 1;
+	public final double contentPara = 1;
+	public final double simThreshold = (double) 1.5;
 	
 	private Levenshtein leven = new Levenshtein();
+	
+	class Feature {
+		public String tagPath;
+		public String vPath;
+		public double vWeight;
+		//public String content;
+		
+		public Feature(String tagPath, String vPath, double vWeight) {
+			this.tagPath = tagPath;
+			this.vPath = vPath;
+			this.vWeight = vWeight;
+		}
+	}
+	
+	public Map<String, Feature> FieldValue;
 
 	
 	public void pageAlign(String url1, String url2){
@@ -44,6 +60,10 @@ public class TemplateStructure {
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getSRC());
 				System.out.println(peernode.getSRC());
+				System.out.println(node1.getVPath());
+				System.out.println(peernode.getVPath());
+				System.out.println(node1.getVWeight());
+				System.out.println(peernode.getVWeight());
 				System.out.println();
 				
 			}
@@ -54,12 +74,24 @@ public class TemplateStructure {
 	
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
 		double res = 0;
+		
+		//Tag Path
 		double editD = this.leven.distance(node1.getTagPathString(), node2.getTagPathString());
-		res += this.tagPathPara * Math.exp(-editD);
-		if (node1.getVPath().equals(node2.getVPath())) {
+		res += this.tagPathPara * Math.exp(-editD/10.0);
+		
+		//System.out.println(node1.getTagPathString());
+		//System.out.println(node2.getTagPathString());
+		//System.out.println(res);
+		
+		//Visual Path
+		/*if (node1.getVPath().equals(node2.getVPath())) {
 			res += this.vPathPara;
-		}
+		}*/
+		
+		//Visual Weight
 		res += this.vWeightPara * Math.exp(-Math.abs(node1.getVWeight() - node2.getVWeight()));
+		
+		//Content
 		editD = this.leven.distance(node1.getSRC(), node2.getSRC());
 		res += this.contentPara * Math.exp(-editD);
 		return res;

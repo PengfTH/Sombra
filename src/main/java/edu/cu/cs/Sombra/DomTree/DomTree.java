@@ -61,6 +61,7 @@ public class DomTree {
 	}
 	
 	public void addGoodNodes(DomTreeNode node) {
+		if (node.getSRC()==null || node.getSRC().isEmpty()) return;
 		this.goodNodes.add(node);
 	}
 	
