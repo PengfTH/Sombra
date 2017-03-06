@@ -1,5 +1,6 @@
 package edu.cu.cs.Sombra.Schema;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,8 +13,8 @@ public class TemplateStructure {
 	public final double tagPathPara = 1;
 	public final double vPathPara = 1;
 	public final double vWeightPara = 1;
-	public final double contentPara = 1;
-	public final double simThreshold = (double) 1.5;
+	public final double contentPara = 5;
+	public final double simThreshold = (double) 5.5;
 	
 	private Levenshtein leven = new Levenshtein();
 	
@@ -30,7 +31,7 @@ public class TemplateStructure {
 		}
 	}
 	
-	public Map<String, Feature> FieldValue;
+	public Map<String, Feature> FieldName = new HashMap<String, Feature>();
 
 	
 	public void pageAlign(String url1, String url2){
@@ -56,7 +57,20 @@ public class TemplateStructure {
 			}
 			//System.out.println(simMax);
 			if (simMax > simThreshold) {
-				System.out.println(node1.getTagPathString());
+				if (node1.getSRC().equals(peernode.getSRC())) {
+					this.FieldName.put(node1.getSRC(), new Feature(node1.getTag(), node1.getVPath(),
+							0.5*(node1.getVWeight() + peernode.getVWeight())));
+					System.out.println(node1.getTagPathString());
+					System.out.println(peernode.getTagPathString());
+					System.out.println(node1.getSRC());
+					System.out.println(peernode.getSRC());
+					System.out.println(node1.getVPath());
+					System.out.println(peernode.getVPath());
+					System.out.println(node1.getVWeight());
+					System.out.println(peernode.getVWeight());
+					System.out.println();
+				}
+				/*System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getSRC());
 				System.out.println(peernode.getSRC());
@@ -64,7 +78,7 @@ public class TemplateStructure {
 				System.out.println(peernode.getVPath());
 				System.out.println(node1.getVWeight());
 				System.out.println(peernode.getVWeight());
-				System.out.println();
+				System.out.println();*/
 				
 			}
 			
@@ -84,9 +98,9 @@ public class TemplateStructure {
 		//System.out.println(res);
 		
 		//Visual Path
-		/*if (node1.getVPath().equals(node2.getVPath())) {
+		if (node1.getVPath().equals(node2.getVPath())) {
 			res += this.vPathPara;
-		}*/
+		}
 		
 		//Visual Weight
 		res += this.vWeightPara * Math.exp(-Math.abs(node1.getVWeight() - node2.getVWeight()));
@@ -97,11 +111,24 @@ public class TemplateStructure {
 		return res;
 	}
 	
+	public void printFieldName() {
+		for (String key : this.FieldName.keySet()) {
+			System.out.println(key);
+			System.out.print(this.FieldName.get(key).tagPath + " ");
+			System.out.print(this.FieldName.get(key).vPath + " ");
+			System.out.print(this.FieldName.get(key).vWeight + " ");
+			System.out.println();
+			System.out.println();
+		}
+	}
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
-		test.pageAlign("amazon.html", "amazon2.html");
+		test.pageAlign("1.html", "2.html");
+		test.printFieldName();
+
 
 	}
 

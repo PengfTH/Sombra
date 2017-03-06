@@ -32,6 +32,7 @@ public class PageStructure {
 					((DomTreeNode) domNode).setVPath(((VisualTreeNode)vNode).getID());
 					((DomTreeNode) domNode).setVWeight(((VisualTreeNode)vNode).getRectHeight() * ((VisualTreeNode)vNode).getRectWidth());
 					this.DomTree.addGoodNodes((DomTreeNode) domNode);
+					//System.out.println(((DomTreeNode) domNode).getSRC());
 					break;
 				}
 			}
