@@ -19,19 +19,6 @@ public class TemplateStructure {
 
 	private Levenshtein leven = new Levenshtein();
 
-	class Feature {
-		public String tagPath;
-		public String vPath;
-		public double vWeight;
-		// public String content;
-
-		public Feature(String tagPath, String vPath, double vWeight) {
-			this.tagPath = tagPath;
-			this.vPath = vPath;
-			this.vWeight = vWeight;
-		}
-	}
-
 	public Set<NameNode> nameNodes = new HashSet<NameNode>();
 	public Set<ValueNode> valueNodes = new HashSet<ValueNode>();
 
