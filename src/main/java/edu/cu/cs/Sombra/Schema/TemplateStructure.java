@@ -36,12 +36,13 @@ public class TemplateStructure {
 			for (DomTreeNode node2 : goodNodes2) {
 				// TODO: one-to-one peer nodes
 				double sim = this.similarity(node1, node2);
+
 				if (sim > 999) {
 					simMax = sim;
 					peernode = node2;
 					break;
 				}
-				
+
 				if (sim > this.simThreshold) {
 					peers++;
 				}
@@ -50,7 +51,7 @@ public class TemplateStructure {
 					peernode = node2;
 				}
 			}
-			// System.out.println(simMax);
+		
 			if (simMax > simThreshold) {
 				// Name Node
 				if (node1.getSRC().equals(peernode.getSRC())) {
@@ -72,17 +73,16 @@ public class TemplateStructure {
 					page1.valueNodes.add(valueNode1);
 					page2.valueNodes.add(valueNode2);
 				}
-				
-				 System.out.println(node1.getTagPathString());
-				 System.out.println(peernode.getTagPathString());
-				 System.out.println(node1.getSRC());
-				 System.out.println(peernode.getSRC());
-				 System.out.println(node1.getVPath());
-				 System.out.println(peernode.getVPath());
-				 System.out.println(node1.getVWeight());
-				 System.out.println(peernode.getVWeight());
-				 System.out.println();
-				 
+
+				System.out.println(node1.getTagPathString());
+				System.out.println(peernode.getTagPathString());
+				System.out.println(node1.getSRC());
+				System.out.println(peernode.getSRC());
+				System.out.println(node1.getVPath());
+				System.out.println(peernode.getVPath());
+				System.out.println(node1.getVWeight());
+				System.out.println(peernode.getVWeight());
+				System.out.println();
 
 			}
 
@@ -92,11 +92,11 @@ public class TemplateStructure {
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
 		double res = 0;
-		
-		if (node1.getId().equals(node2.getId())) {
+
+		if (!node1.getId().isEmpty() && node1.getId().equals(node2.getId())) {
 			return 1000;
 		}
-		
+
 		// Tag Path
 		double editD = this.leven.distance(node1.getTagPathString(), node2.getTagPathString());
 		res += this.tagPathPara * Math.exp(-editD / 10.0);
@@ -118,7 +118,6 @@ public class TemplateStructure {
 		res += this.contentPara * Math.exp(-editD);
 		return res;
 	}
-
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
