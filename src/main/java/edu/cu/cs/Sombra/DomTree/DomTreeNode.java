@@ -78,6 +78,10 @@ public class DomTreeNode extends BaseTreeNode {
 		return this.src;
 	}
 	
+	public String getId() {
+		return this.id;
+	}
+	
 	public void print() {
 		if (this.vWeight == 0) return;
 		System.out.println("tag: " + this.tag);
