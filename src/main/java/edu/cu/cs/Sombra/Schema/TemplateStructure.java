@@ -54,11 +54,11 @@ public class TemplateStructure {
 		
 			if (simMax > simThreshold) {
 				// Name Node
-				if (node1.getSRC().equals(peernode.getSRC())) {
+				if (node1.getContent().equals(peernode.getContent())) {
 					NameNode nameNode1 = new NameNode(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
 					NameNode nameNode2 = new NameNode(peernode.getTag(), peernode.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
 					this.templateNameNodes.add(nameNode1);
 					page1.nameNodes.add(nameNode1);
 					page2.nameNodes.add(nameNode2);
@@ -66,9 +66,9 @@ public class TemplateStructure {
 				// Value Node
 				else {
 					ValueNode valueNode1 = new ValueNode(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
 					ValueNode valueNode2 = new ValueNode(peernode.getTag(), peernode.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
 					this.templateValueNodes.add((TemplateFeature) valueNode1);
 					page1.valueNodes.add(valueNode1);
 					page2.valueNodes.add(valueNode2);
@@ -76,8 +76,8 @@ public class TemplateStructure {
 
 				System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
-				System.out.println(node1.getSRC());
-				System.out.println(peernode.getSRC());
+				System.out.println(node1.getContent());
+				System.out.println(peernode.getContent());
 				System.out.println(node1.getVPath());
 				System.out.println(peernode.getVPath());
 				System.out.println(node1.getVWeight());
@@ -99,7 +99,7 @@ public class TemplateStructure {
 
 		// Tag Path
 		double editD = this.leven.distance(node1.getTagPathString(), node2.getTagPathString());
-		res += this.tagPathPara * Math.exp(-editD / 10.0);
+		res += this.tagPathPara * Math.exp(-editD / 8.0);
 
 		// System.out.println(node1.getTagPathString());
 		// System.out.println(node2.getTagPathString());
@@ -114,8 +114,8 @@ public class TemplateStructure {
 		res += this.vWeightPara * Math.exp(-Math.abs(node1.getVWeight() - node2.getVWeight()));
 
 		// Content
-		editD = this.leven.distance(node1.getSRC(), node2.getSRC());
-		res += this.contentPara * Math.exp(-editD);
+		editD = this.leven.distance(node1.getContent(), node2.getContent());
+		res += this.contentPara * Math.exp(-editD/2.0);
 		return res;
 	}
 

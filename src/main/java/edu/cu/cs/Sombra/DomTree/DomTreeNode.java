@@ -13,11 +13,12 @@ public class DomTreeNode extends BaseTreeNode {
 	private String classname;
 	private List<String> tagPath;
 	private String src;
+	private String content;
 	
 	private String vPath;
 	private int vWeight;
 	
-	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String src) {
+	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String src, String content) {
 		super(parent);
 		// TODO Auto-generated constructor stub
 		this.tag = tag;
@@ -29,6 +30,7 @@ public class DomTreeNode extends BaseTreeNode {
 		}
 		this.tagPath.add(tag);
 		this.src = src;
+		this.content = content;
 	}
 	
 	public void setSombraid(int i) {
@@ -76,6 +78,10 @@ public class DomTreeNode extends BaseTreeNode {
 	
 	public String getSRC() {
 		return this.src;
+	}
+	
+	public String getContent() {
+		return this.content;
 	}
 	
 	public String getId() {

@@ -31,7 +31,7 @@ public class DomTree {
 			this.goodNodes = new HashSet<DomTreeNode>();
 			
 			Element cur = doc.body();
-			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html().toString().replaceAll("<br>", "").replaceAll("</br>", "").replaceAll("&nbsp;",""));
+			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html(), cur.ownText());
 			this.nodenum = 0;
 			this.addChildrenNode(this.root, cur);
 			
@@ -54,14 +54,14 @@ public class DomTree {
 			return;
 		}
 		for (Element e : cur.children()) {
-			DomTreeNode tmpnode = new DomTreeNode(curnode, e.tagName(), e.id(), e.className(), e.html().toString().replaceAll("<br>", "").replaceAll("</br>", "").replaceAll("&nbsp;",""));
+			DomTreeNode tmpnode = new DomTreeNode(curnode, e.tagName(), e.id(), e.className(), e.html(), e.ownText());
 			curnode.addChild((DomTreeNode)tmpnode);
 			this.addChildrenNode(tmpnode, e);
 		}
 	}
 	
 	public void addGoodNodes(DomTreeNode node) {
-		if (node.getSRC()==null || node.getSRC().isEmpty()) return;
+		if (node.getContent()==null || node.getContent().isEmpty()) return;
 		this.goodNodes.add(node);
 	}
 	
