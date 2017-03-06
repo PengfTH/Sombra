@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -62,6 +63,9 @@ public class DomTree {
 	
 	public void addGoodNodes(DomTreeNode node) {
 		if (node.getContent()==null || node.getContent().isEmpty()) return;
+		Pattern p = Pattern.compile("[a-zA-Z0-9]");
+		boolean hasAlphaNumeric = p.matcher(node.getContent()).find();
+		if (! hasAlphaNumeric) return;
 		this.goodNodes.add(node);
 	}
 	
@@ -83,11 +87,15 @@ public class DomTree {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DomTree domtree = new DomTree("amazon2.html");
+		//DomTree domtree = new DomTree("amazon2.html");
 		//domtree.traverse();
 		//for (BaseTreeNode node : domtree.root.getLeafNodes()) {
 			//((DomTreeNode)node).print();
 		//}
+		String s = "(((0";
+		Pattern p = Pattern.compile("[a-zA-Z0-9]");
+		boolean hasSpecialChar = p.matcher(s).find();
+		System.out.println(hasSpecialChar);
 
 	}
 
