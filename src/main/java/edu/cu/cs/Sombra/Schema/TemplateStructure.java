@@ -1,6 +1,7 @@
 package edu.cu.cs.Sombra.Schema;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,32 +10,32 @@ import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import info.debatty.java.stringsimilarity.Levenshtein;
 
 public class TemplateStructure {
-	
+
 	public final double tagPathPara = 1;
 	public final double vPathPara = 1;
 	public final double vWeightPara = 1;
 	public final double contentPara = 5;
 	public final double simThreshold = (double) 5.5;
-	
+
 	private Levenshtein leven = new Levenshtein();
-	
+
 	class Feature {
 		public String tagPath;
 		public String vPath;
 		public double vWeight;
-		//public String content;
-		
+		// public String content;
+
 		public Feature(String tagPath, String vPath, double vWeight) {
 			this.tagPath = tagPath;
 			this.vPath = vPath;
 			this.vWeight = vWeight;
 		}
 	}
-	
-	public Map<String, Feature> FieldName = new HashMap<String, Feature>();
 
-	
-	public void pageAlign(String url1, String url2){
+	public Set<NameNode> nameNodes = new HashSet<NameNode>();
+	public Set<ValueNode> valueNodes = new HashSet<ValueNode>();
+
+	public void pageAlign(String url1, String url2) {
 		PageStructure page1 = new PageStructure(url1);
 		PageStructure page2 = new PageStructure(url2);
 		DomTree domT1 = page1.getDomTree();
@@ -46,8 +47,9 @@ public class TemplateStructure {
 			DomTreeNode peernode = null;
 			int peers = 0;
 			for (DomTreeNode node2 : goodNodes2) {
+				// TODO: one-to-one peer nodes
 				double sim = this.similarity(node1, node2);
-				if (sim > this.simThreshold){
+				if (sim > this.simThreshold) {
 					peers++;
 				}
 				if (sim > simMax) {
@@ -55,62 +57,65 @@ public class TemplateStructure {
 					peernode = node2;
 				}
 			}
-			//System.out.println(simMax);
+			// System.out.println(simMax);
 			if (simMax > simThreshold) {
+				// Name Node
 				if (node1.getSRC().equals(peernode.getSRC())) {
-					this.FieldName.put(node1.getSRC(), new Feature(node1.getTag(), node1.getVPath(),
-							0.5*(node1.getVWeight() + peernode.getVWeight())));
-					System.out.println(node1.getTagPathString());
-					System.out.println(peernode.getTagPathString());
-					System.out.println(node1.getSRC());
-					System.out.println(peernode.getSRC());
-					System.out.println(node1.getVPath());
-					System.out.println(peernode.getVPath());
-					System.out.println(node1.getVWeight());
-					System.out.println(peernode.getVWeight());
-					System.out.println();
+					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+					this.nameNodes.add(nameNode);
 				}
-				/*System.out.println(node1.getTagPathString());
-				System.out.println(peernode.getTagPathString());
-				System.out.println(node1.getSRC());
-				System.out.println(peernode.getSRC());
-				System.out.println(node1.getVPath());
-				System.out.println(peernode.getVPath());
-				System.out.println(node1.getVWeight());
-				System.out.println(peernode.getVWeight());
-				System.out.println();*/
-				
+				// Value Node
+				else {
+					ValueNode valueNode1 = new ValueNode(node1.getTag(), node1.getVPath(),
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+					ValueNode valueNode2 = new ValueNode(peernode.getTag(), peernode.getVPath(),
+							0.5 * (peernode.getVWeight() + peernode.getVWeight()), node1.getSRC());
+					
+				}
+				/*
+				 * System.out.println(node1.getTagPathString());
+				 * System.out.println(peernode.getTagPathString());
+				 * System.out.println(node1.getSRC());
+				 * System.out.println(peernode.getSRC());
+				 * System.out.println(node1.getVPath());
+				 * System.out.println(peernode.getVPath());
+				 * System.out.println(node1.getVWeight());
+				 * System.out.println(peernode.getVWeight());
+				 * System.out.println();
+				 */
+
 			}
-			
-			
+
 		}
+
 	}
-	
+
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
 		double res = 0;
-		
-		//Tag Path
+
+		// Tag Path
 		double editD = this.leven.distance(node1.getTagPathString(), node2.getTagPathString());
-		res += this.tagPathPara * Math.exp(-editD/10.0);
-		
-		//System.out.println(node1.getTagPathString());
-		//System.out.println(node2.getTagPathString());
-		//System.out.println(res);
-		
-		//Visual Path
+		res += this.tagPathPara * Math.exp(-editD / 10.0);
+
+		// System.out.println(node1.getTagPathString());
+		// System.out.println(node2.getTagPathString());
+		// System.out.println(res);
+
+		// Visual Path
 		if (node1.getVPath().equals(node2.getVPath())) {
 			res += this.vPathPara;
 		}
-		
-		//Visual Weight
+
+		// Visual Weight
 		res += this.vWeightPara * Math.exp(-Math.abs(node1.getVWeight() - node2.getVWeight()));
-		
-		//Content
+
+		// Content
 		editD = this.leven.distance(node1.getSRC(), node2.getSRC());
 		res += this.contentPara * Math.exp(-editD);
 		return res;
 	}
-	
+
 	public void printFieldName() {
 		for (String key : this.FieldName.keySet()) {
 			System.out.println(key);
@@ -121,14 +126,12 @@ public class TemplateStructure {
 			System.out.println();
 		}
 	}
-	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
 		test.pageAlign("1.html", "2.html");
 		test.printFieldName();
-
 
 	}
 
