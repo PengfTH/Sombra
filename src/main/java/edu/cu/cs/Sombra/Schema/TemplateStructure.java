@@ -19,8 +19,8 @@ public class TemplateStructure {
 
 	private Levenshtein leven = new Levenshtein();
 
-	public Set<NameNode> nameNodes = new HashSet<NameNode>();
-	public Set<ValueNode> valueNodes = new HashSet<ValueNode>();
+	public Set<NameNode> templateNameNodes = new HashSet<NameNode>();
+	public Set<TemplateFeature> templateValueNodes = new HashSet<TemplateFeature>();
 
 	public void pageAlign(String url1, String url2) {
 		PageStructure page1 = new PageStructure(url1);
@@ -48,9 +48,13 @@ public class TemplateStructure {
 			if (simMax > simThreshold) {
 				// Name Node
 				if (node1.getSRC().equals(peernode.getSRC())) {
-					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
+					NameNode nameNode1 = new NameNode(node1.getTag(), node1.getVPath(),
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
-					this.nameNodes.add(nameNode);
+					NameNode nameNode2 = new NameNode(peernode.getTag(), peernode.getVPath(),
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
+					this.templateNameNodes.add(nameNode1);
+					page1.nameNodes.add(nameNode1);
+					page2.nameNodes.add(nameNode2);
 				}
 				// Value Node
 				else {
@@ -58,7 +62,9 @@ public class TemplateStructure {
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getSRC());
 					ValueNode valueNode2 = new ValueNode(peernode.getTag(), peernode.getVPath(),
 							0.5 * (peernode.getVWeight() + peernode.getVWeight()), node1.getSRC());
-					
+					this.templateValueNodes.add((TemplateFeature) valueNode1);
+					page1.valueNodes.add(valueNode1);
+					page2.valueNodes.add(valueNode2);
 				}
 				/*
 				 * System.out.println(node1.getTagPathString());
@@ -103,16 +109,6 @@ public class TemplateStructure {
 		return res;
 	}
 
-	public void printFieldName() {
-		for (String key : this.FieldName.keySet()) {
-			System.out.println(key);
-			System.out.print(this.FieldName.get(key).tagPath + " ");
-			System.out.print(this.FieldName.get(key).vPath + " ");
-			System.out.print(this.FieldName.get(key).vWeight + " ");
-			System.out.println();
-			System.out.println();
-		}
-	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
