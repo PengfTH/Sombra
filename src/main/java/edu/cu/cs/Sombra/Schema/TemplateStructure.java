@@ -81,6 +81,7 @@ public class TemplateStructure {
 		}
 
 	}
+	
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
 		double res = 0;

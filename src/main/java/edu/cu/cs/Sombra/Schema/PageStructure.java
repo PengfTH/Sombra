@@ -20,12 +20,15 @@ public class PageStructure {
 
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
-		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile, false);
+		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile);
 		this.nameNodes = new HashSet<NameNode>();
 		this.valueNodes = new HashSet<ValueNode>();
 		this.treeAlign();
 	}
 
+	/*
+	 * Align DOM Tree and Visual Tree
+	 */
 	private void treeAlign() {
 		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
