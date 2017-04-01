@@ -5,17 +5,8 @@ import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
-import info.debatty.java.stringsimilarity.Levenshtein;
 
 public class TemplateStructure {
-
-	public final double tagPathPara = 1;
-	public final double vPathPara = 1;
-	public final double vWeightPara = 1;
-	public final double contentPara = 1;
-	public final double simThreshold = (double) 2;
-
-	private Levenshtein leven = new Levenshtein();
 
 	public Set<NameNode> templateNameNodes = new HashSet<NameNode>();
 	public Set<TemplateFeature> templateValueNodes = new HashSet<TemplateFeature>();
@@ -49,7 +40,7 @@ public class TemplateStructure {
 				}
 			}
 
-			if (simMax > simThreshold) {
+			if (simMax > TemplateFeature.simThreshold) {
 				matched.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
@@ -82,32 +73,9 @@ public class TemplateStructure {
 	
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
-		double res = 0;
-
-		if (!node1.getId().isEmpty() && node1.getId().equals(node2.getId())) {
-			return 1000;
-		}
-
-		// Tag Path
-		double editD = this.leven.distance(node1.getTagPathString(), node2.getTagPathString());
-		res += this.tagPathPara * Math.exp(-editD / 8.0);
-
-		// System.out.println(node1.getTagPathString());
-		// System.out.println(node2.getTagPathString());
-		// System.out.println(res);
-
-		// Visual Path
-		if (node1.getVPath().equals(node2.getVPath())) {
-			res += this.vPathPara;
-		}
-
-		// Visual Weight
-		res += this.vWeightPara * Math.exp(-Math.abs(node1.getVWeight() - node2.getVWeight()));
-
-		// Content
-		editD = this.leven.distance(node1.getContent(), node2.getContent());
-		res += this.contentPara * Math.exp(-editD / 2.0);
-		return res;
+		NameNode nameNode1 = new NameNode(node1.getTag(), node1.getVPath(),
+				node1.getVWeight(), node1.getId(), node1.getContent());
+		return nameNode1.similarity(node2);
 	}
 
 	public static void main(String[] args) {

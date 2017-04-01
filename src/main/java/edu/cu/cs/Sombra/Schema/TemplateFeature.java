@@ -9,11 +9,11 @@ public abstract class TemplateFeature {
 	public double vWeight;
 	public String id;
 	
-	public final double tagPathPara = 1;
-	public final double vPathPara = 1;
-	public final double vWeightPara = 1;
-	public final double contentPara = 1;
-	public final double simThreshold = (double) 2;
+	public static final double tagPathPara = 1;
+	public static final double vPathPara = 1;
+	public static final double vWeightPara = 1;
+	public static final double contentPara = 1;
+	public static final double simThreshold = (double) 2;
 	
 	protected Levenshtein leven = new Levenshtein();
 
