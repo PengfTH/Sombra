@@ -2,8 +2,6 @@ package edu.cu.cs.Sombra.Schema;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
@@ -29,23 +27,22 @@ public class TemplateStructure {
 		DomTree domT2 = page2.getDomTree();
 		Set<DomTreeNode> goodNodes1 = domT1.getGoodNodes();
 		Set<DomTreeNode> goodNodes2 = domT2.getGoodNodes();
+		Set<DomTreeNode> temp = new HashSet<DomTreeNode>();
 		for (DomTreeNode node1 : goodNodes1) {
 			double simMax = -1;
 			DomTreeNode peernode = null;
-			int peers = 0;
 			for (DomTreeNode node2 : goodNodes2) {
-				// TODO: one-to-one peer nodes
+				// one-to-one peer nodes
+				if (temp.contains(node2)) {
+					continue;
+				}
 				double sim = this.similarity(node1, node2);
-
 				if (sim > 999) {
 					simMax = sim;
 					peernode = node2;
 					break;
 				}
 
-				if (sim > this.simThreshold) {
-					peers++;
-				}
 				if (sim > simMax) {
 					simMax = sim;
 					peernode = node2;
@@ -53,6 +50,7 @@ public class TemplateStructure {
 			}
 
 			if (simMax > simThreshold) {
+				temp.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
 					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
