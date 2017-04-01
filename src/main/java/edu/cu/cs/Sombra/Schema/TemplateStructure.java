@@ -44,18 +44,18 @@ public class TemplateStructure {
 				matched.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
-					TemplateFeature nameNode = new TemplateFeature(node1.getTag(), node1.getVPath(),
+					TemplateFeature nameNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateNameNodes.add(nameNode);
 				}
 				// Value Node
 				else {
-					TemplateFeature valueNode = new TemplateFeature(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), null);
+					TemplateFeature valueNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateValueNodes.add(valueNode);
 				}
 				
-				/*System.out.println(node1.getTagPathString());
+				System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getContent());
 				System.out.println(peernode.getContent());
@@ -64,7 +64,7 @@ public class TemplateStructure {
 				System.out.println(node1.getVWeight());
 				System.out.println(peernode.getVWeight());
 				System.out.println();
-				*/
+				
 				
 			}
 

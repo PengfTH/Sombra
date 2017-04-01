@@ -39,7 +39,7 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("peernode score: " + simMax);
+			System.out.println("name peernode score: " + simMax);
 			peernode.print();
 			
 			
@@ -75,7 +75,7 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("peernode score: " + simMax);
+			System.out.println("value peernode score: " + simMax);
 			peernode.print();
 			
 			
@@ -99,7 +99,7 @@ public class SchemaAnalyzer {
 		temp.pageAlign("1.html", "2.html");
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("2.html");
+		PageStructure page = new PageStructure("3.html");
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("Name Nodes");
 			for (DomTreeNode node : page.nameNodes) {
