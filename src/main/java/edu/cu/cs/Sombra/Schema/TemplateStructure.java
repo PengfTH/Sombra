@@ -54,8 +54,8 @@ public class TemplateStructure {
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), null);
 					this.templateValueNodes.add(valueNode);
 				}
-				/*
-				System.out.println(node1.getTagPathString());
+				
+				/*System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getContent());
 				System.out.println(peernode.getContent());
@@ -64,7 +64,8 @@ public class TemplateStructure {
 				System.out.println(node1.getVWeight());
 				System.out.println(peernode.getVWeight());
 				System.out.println();
-				**/
+				*/
+				
 			}
 
 		}

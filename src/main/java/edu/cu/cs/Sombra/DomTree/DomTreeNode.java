@@ -90,12 +90,11 @@ public class DomTreeNode extends BaseTreeNode {
 	
 	public void print() {
 		if (this.vWeight == 0) return;
-		System.out.println("tag: " + this.tag);
+		System.out.println("tagpath: " + this.getTagPathString());
 		System.out.println("id: " + this.id);
-		System.out.println("class: " + this.classname);
-		System.out.println("sombraid: " + this.getSombraid());
 		System.out.println("vPath: " + this.getVPath());
 		System.out.println("vWeight: " + this.getVWeight());
+		System.out.println("Content: " + this.getContent());
 		System.out.println();		
 	}
 	
