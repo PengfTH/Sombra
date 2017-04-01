@@ -17,6 +17,8 @@ public class SchemaAnalyzer {
 		Set<TemplateFeature> tempNameNodes  = temp.templateNameNodes;
 		
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
+		
+		//match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -50,6 +52,8 @@ public class SchemaAnalyzer {
 				return false;
 			}
 		}
+		
+		
 		
 		return true;
 	}

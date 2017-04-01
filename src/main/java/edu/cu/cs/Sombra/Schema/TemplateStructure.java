@@ -73,7 +73,7 @@ public class TemplateStructure {
 	
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
-		TemplateFeature nameNode1 = new TemplateFeature(node1, true);
+		TemplateFeature nameNode1 = new TemplateFeature(node1);
 		return nameNode1.similarity(node2);
 	}
 

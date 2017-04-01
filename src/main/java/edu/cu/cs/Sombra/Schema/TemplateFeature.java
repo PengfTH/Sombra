@@ -27,7 +27,7 @@ public class TemplateFeature {
 		this.content = content;
 	}
 	
-	public TemplateFeature(DomTreeNode node, boolean content){
+	public TemplateFeature(DomTreeNode node){
 		this.tagPath = node.getTagPathString();
 		this.vPath = node.getVPath();
 		this.vWeight = node.getVWeight();
