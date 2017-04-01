@@ -37,13 +37,21 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			if (simMax > tempNameNode.simThreshold) {
-				page.nameNodes.add(peernode);
-				break;
+			if (simMax > TemplateFeature.simThreshold) {
+				matched.add(peernode);
+				if (tempNameNode.content.equals(peernode.getContent())) {
+					page.nameNodes.add(peernode);
+				} else {
+					page.valueNodes.add(peernode);
+				}
+			} else { // strong assumption that page should strictly match template
+				page.nameNodes.clear();
+				page.valueNodes.clear();
+				return false;
 			}
 		}
 		
-		return false;
+		return true;
 	}
 	
 	
