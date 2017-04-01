@@ -8,7 +8,7 @@ public class TemplateFeature {
 	public String vPath;
 	public double vWeight;
 	public String id;
-	public String fieldName;
+	public String content;
 	
 	public static final double tagPathPara = 1;
 	public static final double vPathPara = 1;
@@ -19,12 +19,20 @@ public class TemplateFeature {
 	protected Levenshtein leven = new Levenshtein();
 
 	
-	public TemplateFeature(String tagPath, String vPath, double vWeight, String id, String fieldName) {
+	public TemplateFeature(String tagPath, String vPath, double vWeight, String id, String content) {
 		this.tagPath = tagPath;
 		this.vPath = vPath;
 		this.vWeight = vWeight;
 		this.id = id;
-		this.fieldName = fieldName;
+		this.content = content;
+	}
+	
+	public TemplateFeature(DomTreeNode node, boolean content){
+		this.tagPath = node.getTagPathString();
+		this.vPath = node.getVPath();
+		this.vWeight = node.getVWeight();
+		this.id = node.getId();
+		this.content = node.getContent();
 	}
 
 	
@@ -46,6 +54,10 @@ public class TemplateFeature {
 
 		// Visual Weight
 		res += this.vWeightPara * Math.exp(-Math.abs(node.getVWeight() - this.vWeight));
+		
+		//content
+		editD = this.leven.distance(node.getContent(), this.content);
+		res += this.contentPara * Math.exp(-editD / 2.0);
 		
 		return res;
 	}
