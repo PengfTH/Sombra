@@ -69,7 +69,31 @@ public class TemplateStructure {
 			}
 
 		}
-
+		this.refine(page1, page2);
+	}
+	
+	private void refine(PageStructure page1, PageStructure page2) {
+		SchemaAnalyzer analyzer = new SchemaAnalyzer();
+		analyzer.analyze(page1, this);
+		analyzer.analyze(page2, this);
+		
+		Set<DomTreeNode> matched1 = page1.value2name();
+		Set<DomTreeNode> matched2 = page2.value2name();
+		matched1.addAll(matched2);
+		this.templateNameNodes.clear();
+		for (DomTreeNode node : matched1) {
+			TemplateFeature nameNode = new TemplateFeature(node);
+			this.templateNameNodes.add(nameNode);
+		}
+		
+		Set<DomTreeNode> value1 = page1.V2N.keySet();
+		Set<DomTreeNode> value2 = page2.V2N.keySet();
+		value1.addAll(value2);
+		this.templateValueNodes.clear();
+		for (DomTreeNode node : value1) {
+			TemplateFeature valueNode = new TemplateFeature(node);
+			this.templateValueNodes.add(valueNode);
+		}
 	}
 	
 

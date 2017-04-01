@@ -1,7 +1,9 @@
 package edu.cu.cs.Sombra.Schema;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
@@ -16,13 +18,14 @@ public class PageStructure {
 	private DomTree DomTree;
 	public Set<DomTreeNode> nameNodes;
 	public Set<DomTreeNode> valueNodes;
-	// private Map<DomTreeNode, VisualTreeNode> D2V;
+	public Map<DomTreeNode, String> V2N;
 
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
 		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile);
 		this.nameNodes = new HashSet<DomTreeNode>();
 		this.valueNodes = new HashSet<DomTreeNode>();
+		this.V2N = new HashMap<DomTreeNode, String>();
 		this.treeAlign();
 	}
 
@@ -51,6 +54,38 @@ public class PageStructure {
 
 	public DomTree getDomTree() {
 		return this.DomTree;
+	}
+	
+	public Set<DomTreeNode> value2name() {
+		// one-to-one
+		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
+		for (DomTreeNode valuenode : valueNodes) {
+			// parent node
+			DomTreeNode parent = (DomTreeNode) valuenode.getParent();
+			if (nameNodes.contains(parent) && !matched.contains(parent)) {
+				V2N.put(valuenode, parent.getContent());
+			} else {	// sibling nodes
+				List<BaseTreeNode> siblings = valuenode.getSiblings();
+				for (BaseTreeNode sibling : siblings) {
+					DomTreeNode domTreeNode = (DomTreeNode) sibling;
+					if (nameNodes.contains(domTreeNode) && !matched.contains(domTreeNode)) {
+						V2N.put(valuenode, domTreeNode.getContent());
+						break;
+					}
+				}
+			}
+			// default
+			if (!V2N.containsKey(valuenode)) {
+				String id = valuenode.getId();
+				DomTreeNode cur = valuenode;
+				while (id.isEmpty()) {
+					cur = (DomTreeNode) cur.getParent();
+					id = cur.getId();
+				}
+				V2N.put(valuenode, id);
+			}
+		}
+		return matched;
 	}
 
 	public static void main(String[] args) {
