@@ -56,6 +56,9 @@ public class SchemaAnalyzer {
 
 		// match value nodes
 		for (TemplateFeature tempValueNode : tempValueNodes) {
+			System.out.println("**************");
+			tempValueNode.print();
+			
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode pageNode : pageNodes) {
@@ -71,6 +74,11 @@ public class SchemaAnalyzer {
 					}
 				}
 			}
+			
+			System.out.println("peernode score: " + simMax);
+			peernode.print();
+			
+			
 
 			if (simMax > TemplateFeature.simThreshold) {
 				page.valueNodes.add(peernode);
@@ -91,7 +99,7 @@ public class SchemaAnalyzer {
 		temp.pageAlign("1.html", "2.html");
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("3.html");
+		PageStructure page = new PageStructure("2.html");
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("Name Nodes");
 			for (DomTreeNode node : page.nameNodes) {
