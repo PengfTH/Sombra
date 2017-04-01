@@ -20,7 +20,7 @@ public class PageStructure {
 
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
-		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile, true);
+		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile, false);
 		this.nameNodes = new HashSet<NameNode>();
 		this.valueNodes = new HashSet<ValueNode>();
 		this.treeAlign();

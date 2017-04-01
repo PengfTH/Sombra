@@ -1,9 +1,9 @@
 package edu.cu.cs.Sombra.Schema;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
@@ -51,29 +51,21 @@ public class TemplateStructure {
 					peernode = node2;
 				}
 			}
-		
+
 			if (simMax > simThreshold) {
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
-					NameNode nameNode1 = new NameNode(node1.getTag(), node1.getVPath(),
+					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
-					NameNode nameNode2 = new NameNode(peernode.getTag(), peernode.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
-					this.templateNameNodes.add(nameNode1);
-					page1.nameNodes.add(nameNode1);
-					page2.nameNodes.add(nameNode2);
+					this.templateNameNodes.add(nameNode);
 				}
 				// Value Node
 				else {
-					ValueNode valueNode1 = new ValueNode(node1.getTag(), node1.getVPath(),
+					ValueNode valueNode = new ValueNode(node1.getTag(), node1.getVPath(),
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
-					ValueNode valueNode2 = new ValueNode(peernode.getTag(), peernode.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
-					this.templateValueNodes.add((TemplateFeature) valueNode1);
-					page1.valueNodes.add(valueNode1);
-					page2.valueNodes.add(valueNode2);
+					this.templateValueNodes.add((TemplateFeature) valueNode);
 				}
-
+				/*
 				System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getContent());
@@ -83,7 +75,7 @@ public class TemplateStructure {
 				System.out.println(node1.getVWeight());
 				System.out.println(peernode.getVWeight());
 				System.out.println();
-
+				**/
 			}
 
 		}
@@ -115,7 +107,7 @@ public class TemplateStructure {
 
 		// Content
 		editD = this.leven.distance(node1.getContent(), node2.getContent());
-		res += this.contentPara * Math.exp(-editD/2.0);
+		res += this.contentPara * Math.exp(-editD / 2.0);
 		return res;
 	}
 
@@ -123,7 +115,6 @@ public class TemplateStructure {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
 		test.pageAlign("1.html", "2.html");
-
 	}
 
 }
