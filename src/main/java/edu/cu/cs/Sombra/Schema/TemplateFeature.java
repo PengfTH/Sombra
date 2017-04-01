@@ -3,11 +3,12 @@ package edu.cu.cs.Sombra.Schema;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import info.debatty.java.stringsimilarity.Levenshtein;
 
-public abstract class TemplateFeature {
+public class TemplateFeature {
 	public String tagPath;
 	public String vPath;
 	public double vWeight;
 	public String id;
+	public String fieldName;
 	
 	public static final double tagPathPara = 1;
 	public static final double vPathPara = 1;
@@ -18,12 +19,14 @@ public abstract class TemplateFeature {
 	protected Levenshtein leven = new Levenshtein();
 
 	
-	public TemplateFeature(String tagPath, String vPath, double vWeight, String id) {
+	public TemplateFeature(String tagPath, String vPath, double vWeight, String id, String fieldName) {
 		this.tagPath = tagPath;
 		this.vPath = vPath;
 		this.vWeight = vWeight;
 		this.id = id;
+		this.fieldName = fieldName;
 	}
+
 	
 	public double similarity(DomTreeNode node) {
 		double res = 0;

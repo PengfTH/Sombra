@@ -14,15 +14,15 @@ public class PageStructure {
 
 	private VisualTree VTree;
 	private DomTree DomTree;
-	public Set<NameNode> nameNodes;
-	public Set<ValueNode> valueNodes;
+	public Set<DomTreeNode> nameNodes;
+	public Set<DomTreeNode> valueNodes;
 	// private Map<DomTreeNode, VisualTreeNode> D2V;
 
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
 		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile);
-		this.nameNodes = new HashSet<NameNode>();
-		this.valueNodes = new HashSet<ValueNode>();
+		this.nameNodes = new HashSet<DomTreeNode>();
+		this.valueNodes = new HashSet<DomTreeNode>();
 		this.treeAlign();
 	}
 

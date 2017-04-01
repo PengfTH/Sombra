@@ -14,10 +14,10 @@ public class SchemaAnalyzer {
 	public boolean analyze(PageStructure page, TemplateStructure temp) {
 		Set<DomTreeNode> pageNodes = page.getDomTree().getGoodNodes();
 		Set<TemplateFeature> tempValueNodes = temp.templateValueNodes;
-		Set<NameNode> tempNameNodes  = temp.templateNameNodes;
+		Set<TemplateFeature> tempNameNodes  = temp.templateNameNodes;
 		
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
-		for (NameNode tempNameNode : tempNameNodes) {
+		for (TemplateFeature tempNameNode : tempNameNodes) {
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode pageNode: pageNodes) {
@@ -37,7 +37,10 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			
+			if (simMax > tempNameNode.simThreshold) {
+				page.nameNodes.add(peernode);
+				break;
+			}
 		}
 		
 		return false;

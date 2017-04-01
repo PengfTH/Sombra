@@ -8,7 +8,7 @@ import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 
 public class TemplateStructure {
 
-	public Set<NameNode> templateNameNodes = new HashSet<NameNode>();
+	public Set<TemplateFeature> templateNameNodes = new HashSet<TemplateFeature>();
 	public Set<TemplateFeature> templateValueNodes = new HashSet<TemplateFeature>();
 
 	public void pageAlign(String url1, String url2) {
@@ -44,15 +44,15 @@ public class TemplateStructure {
 				matched.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
-					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
+					TemplateFeature nameNode = new TemplateFeature(node1.getTag(), node1.getVPath(),
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateNameNodes.add(nameNode);
 				}
 				// Value Node
 				else {
-					ValueNode valueNode = new ValueNode(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
-					this.templateValueNodes.add((TemplateFeature) valueNode);
+					TemplateFeature valueNode = new TemplateFeature(node1.getTag(), node1.getVPath(),
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), null);
+					this.templateValueNodes.add(valueNode);
 				}
 				/*
 				System.out.println(node1.getTagPathString());
@@ -73,7 +73,7 @@ public class TemplateStructure {
 	
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
-		NameNode nameNode1 = new NameNode(node1.getTag(), node1.getVPath(),
+		TemplateFeature nameNode1 = new TemplateFeature(node1.getTag(), node1.getVPath(),
 				node1.getVWeight(), node1.getId(), node1.getContent());
 		return nameNode1.similarity(node2);
 	}
