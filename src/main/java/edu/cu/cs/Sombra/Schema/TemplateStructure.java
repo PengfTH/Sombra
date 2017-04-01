@@ -27,13 +27,13 @@ public class TemplateStructure {
 		DomTree domT2 = page2.getDomTree();
 		Set<DomTreeNode> goodNodes1 = domT1.getGoodNodes();
 		Set<DomTreeNode> goodNodes2 = domT2.getGoodNodes();
-		Set<DomTreeNode> temp = new HashSet<DomTreeNode>();
+		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		for (DomTreeNode node1 : goodNodes1) {
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode node2 : goodNodes2) {
 				// one-to-one peer nodes
-				if (temp.contains(node2)) {
+				if (matched.contains(node2)) {
 					continue;
 				}
 				double sim = this.similarity(node1, node2);
@@ -50,17 +50,17 @@ public class TemplateStructure {
 			}
 
 			if (simMax > simThreshold) {
-				temp.add(peernode);
+				matched.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
 					NameNode nameNode = new NameNode(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateNameNodes.add(nameNode);
 				}
 				// Value Node
 				else {
 					ValueNode valueNode = new ValueNode(node1.getTag(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getContent());
+							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateValueNodes.add((TemplateFeature) valueNode);
 				}
 				/*
