@@ -55,7 +55,7 @@ public class TemplateStructure {
 					this.templateValueNodes.add(valueNode);
 				}
 				
-				System.out.println(node1.getTagPathString());
+				/*System.out.println(node1.getTagPathString());
 				System.out.println(peernode.getTagPathString());
 				System.out.println(node1.getContent());
 				System.out.println(peernode.getContent());
@@ -63,7 +63,7 @@ public class TemplateStructure {
 				System.out.println(peernode.getVPath());
 				System.out.println(node1.getVWeight());
 				System.out.println(peernode.getVWeight());
-				System.out.println();
+				System.out.println();*/
 				
 				
 			}
@@ -76,10 +76,12 @@ public class TemplateStructure {
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
 		analyzer.analyze(page1, this);
 		analyzer.analyze(page2, this);
+		Set<DomTreeNode> temp = new HashSet<DomTreeNode>();
 		
 		Set<DomTreeNode> matched1 = page1.value2name();
 		Set<DomTreeNode> matched2 = page2.value2name();
-		matched1.addAll(matched2);
+		temp.addAll(matched1);
+		temp.addAll(matched2);
 		this.templateNameNodes.clear();
 		for (DomTreeNode node : matched1) {
 			TemplateFeature nameNode = new TemplateFeature(node);
@@ -88,7 +90,9 @@ public class TemplateStructure {
 		
 		Set<DomTreeNode> value1 = page1.V2N.keySet();
 		Set<DomTreeNode> value2 = page2.V2N.keySet();
-		value1.addAll(value2);
+		temp.clear();
+		temp.addAll(value1);
+		temp.addAll(value2);
 		this.templateValueNodes.clear();
 		for (DomTreeNode node : value1) {
 			TemplateFeature valueNode = new TemplateFeature(node);
