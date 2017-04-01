@@ -1,5 +1,7 @@
 package edu.cu.cs.Sombra.VisualTree;
 
+import java.io.File;
+
 import org.fit.vips.Vips;
 
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
@@ -32,9 +34,10 @@ public class VisualTree extends BaseTreeNode {
 		this.url = "";
 	}
 
-	public static VisualTree getVisualTree(String filename, boolean exist) {
+	public static VisualTree getVisualTree(String filename) {
 		String outputFilename = "VT_" + filename;
-		if (!exist) {
+		File file = new File(outputFilename + ".xml");
+		if (!(file.exists() && !file.isDirectory())) {
 			try {
 				Vips vips = new Vips();
 				vips.setOutputFileName(outputFilename);
