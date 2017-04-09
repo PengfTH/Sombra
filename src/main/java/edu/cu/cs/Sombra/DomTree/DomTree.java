@@ -2,6 +2,7 @@ package edu.cu.cs.Sombra.DomTree;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class DomTree {
 	private DomTreeNode root;
 	private int nodenum;
 	private String title;
-	private Set<DomTreeNode> goodNodes;
+	private List<DomTreeNode> goodNodes;
 
 	public DomTree(String filename) {
 		
@@ -29,7 +30,7 @@ public class DomTree {
 			
 			Document doc = Jsoup.parse(input, "UTF-8");
 			this.title = doc.title();
-			this.goodNodes = new HashSet<DomTreeNode>();
+			this.goodNodes = new ArrayList<DomTreeNode>();
 			
 			Element cur = doc.body();
 			this.root = new DomTreeNode(null, cur.tagName(), cur.id(), cur.className(), cur.html(), cur.ownText());
@@ -69,7 +70,7 @@ public class DomTree {
 		this.goodNodes.add(node);
 	}
 	
-	public Set<DomTreeNode> getGoodNodes() {
+	public 	List<DomTreeNode> getGoodNodes() {
 		return this.goodNodes;
 	}
 	

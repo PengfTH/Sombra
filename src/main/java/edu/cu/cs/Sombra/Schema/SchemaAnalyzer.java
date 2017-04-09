@@ -1,6 +1,7 @@
 package edu.cu.cs.Sombra.Schema;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
@@ -12,16 +13,19 @@ public class SchemaAnalyzer {
 	}
 
 	public boolean analyze(PageStructure page, TemplateStructure temp) {
-		Set<DomTreeNode> pageNodes = page.getDomTree().getGoodNodes();
+		List<DomTreeNode> pageNodes = page.getDomTree().getGoodNodes();
 		Set<TemplateFeature> tempValueNodes = temp.templateValueNodes;
 		Set<TemplateFeature> tempNameNodes = temp.templateNameNodes;
+		
+		System.out.println("Temp Name Node size: " + tempNameNodes.size());
+		
 
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 
 		// match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
-			//System.out.println("**************");
-			//tempNameNode.print();
+			System.out.println("**************");
+			tempNameNode.print();
 
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -39,25 +43,23 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			//System.out.println("name peernode score: " + simMax);
-			//peernode.print();
-			
-			
+			System.out.println("name peernode score: " + simMax);
+			peernode.print();		
 			
 
 			if (simMax > TemplateFeature.simThreshold && tempNameNode.content.equals(peernode.getContent())) {
 				page.nameNodes.add(peernode);
 				matched.add(peernode);
 			} else {
-				page.nameNodes.clear();
-				return false;
+				//page.nameNodes.clear();
+				//return false;
 			}
 		}
 
 		// match value nodes
 		for (TemplateFeature tempValueNode : tempValueNodes) {
-			//System.out.println("**************");
-			//tempValueNode.print();
+			System.out.println("**************");
+			tempValueNode.print();
 			
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -75,19 +77,19 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			//System.out.println("value peernode score: " + simMax);
-			//peernode.print();
-			
+			System.out.println("value peernode score: " + simMax);
+			peernode.print();
 			
 
 			if (simMax > TemplateFeature.simThreshold) {
 				page.valueNodes.add(peernode);
 				matched.add(peernode);
 			} else {
-				page.nameNodes.clear();
-				page.valueNodes.clear();
-				return false;
+				//page.nameNodes.clear();
+				//page.valueNodes.clear();
+				//return false;
 			}
+
 		}
 
 		return true;
@@ -101,13 +103,15 @@ public class SchemaAnalyzer {
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
 		PageStructure page = new PageStructure("3.html");
 		if (analyzer.analyze(page, temp)) {
-			System.out.println("Name Nodes");
+			System.out.println("Name Nodes: ");
+			System.out.println(page.nameNodes.size());
 			for (DomTreeNode node : page.nameNodes) {
-				node.print();
+				//node.print();
 			}
 			System.out.println("Value Nodes");
+			System.out.println(page.valueNodes.size());
 			for (DomTreeNode node : page.valueNodes) {
-				node.print();
+				//node.print();
 			}
 		} else {
 			System.out.println("No match");

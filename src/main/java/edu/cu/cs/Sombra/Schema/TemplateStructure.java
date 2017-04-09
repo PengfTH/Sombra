@@ -1,6 +1,7 @@
 package edu.cu.cs.Sombra.Schema;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
@@ -16,8 +17,9 @@ public class TemplateStructure {
 		PageStructure page2 = new PageStructure(url2);
 		DomTree domT1 = page1.getDomTree();
 		DomTree domT2 = page2.getDomTree();
-		Set<DomTreeNode> goodNodes1 = domT1.getGoodNodes();
-		Set<DomTreeNode> goodNodes2 = domT2.getGoodNodes();
+		List<DomTreeNode> goodNodes1 = domT1.getGoodNodes();
+		List<DomTreeNode> goodNodes2 = domT2.getGoodNodes();
+
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		for (DomTreeNode node1 : goodNodes1) {
 			double simMax = -1;

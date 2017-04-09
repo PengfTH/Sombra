@@ -60,16 +60,33 @@ public class PageStructure {
 		// one-to-one
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		for (DomTreeNode valuenode : valueNodes) {
+			// sombraid-based
+			List<DomTreeNode> sombraList = DomTree.getGoodNodes();
+			for (int i = sombraList.indexOf(valuenode) - 1; i >= 0; i--) {
+				DomTreeNode candidate = sombraList.get(i);
+				if (candidate.getVPath().equals(valuenode.getVPath())
+						&& nameNodes.contains(candidate)
+						&& !matched.contains(candidate)) {
+					matched.add(candidate);
+					V2N.put(valuenode, candidate.getContent());
+					break;
+				}
+			}
+			if (V2N.containsKey(valuenode)) {
+				continue;
+			}
 			// parent node
 			DomTreeNode parent = (DomTreeNode) valuenode.getParent();
 			if (nameNodes.contains(parent) && !matched.contains(parent)) {
 				V2N.put(valuenode, parent.getContent());
+				matched.add(parent);
 			} else {	// sibling nodes
 				List<BaseTreeNode> siblings = valuenode.getSiblings();
 				for (BaseTreeNode sibling : siblings) {
 					DomTreeNode domTreeNode = (DomTreeNode) sibling;
 					if (nameNodes.contains(domTreeNode) && !matched.contains(domTreeNode)) {
 						V2N.put(valuenode, domTreeNode.getContent());
+						matched.add(parent);
 						break;
 					}
 				}
@@ -83,6 +100,7 @@ public class PageStructure {
 					id = cur.getId();
 				}
 				V2N.put(valuenode, id);
+				matched.add(cur);
 			}
 		}
 		return matched;
