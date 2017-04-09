@@ -1,7 +1,6 @@
 package edu.cu.cs.Sombra.Schema;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -59,12 +58,57 @@ public class PageStructure {
 	public DomTree getDomTree() {
 		return this.DomTree;
 	}
-	
+
 	public Set<DomTreeNode> value2name() {
 		// one-to-one
-		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		List<DomTreeNode> valuelist = new ArrayList<DomTreeNode>();
 		valuelist.addAll(valueNodes);
+		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
+			public int compare(DomTreeNode node1, DomTreeNode node2) {
+				if (node1.getSombraid() == node2.getSombraid())
+					return 0;
+				if (node1.getSombraid() > node2.getSombraid())
+					return 1;
+				return -1;
+			}
+		});
+		Set<DomTreeNode> matched = this.value2name(valuelist);
+
+		// 2nd round
+		valuelist.clear();
+		for (DomTreeNode node : nameNodes) {
+			if (!matched.contains(node)) {
+				valuelist.add(node);
+			}
+		}
+		for (DomTreeNode node : valuelist) {
+			nameNodes.remove(node);
+		}
+		matched.addAll(this.value2name(valuelist));
+		return matched;
+		// if (V2N.containsKey(valuenode)) {
+		// continue;
+		// }
+		// parent node
+		/*
+		 * DomTreeNode parent = (DomTreeNode) valuenode.getParent(); if
+		 * (nameNodes.contains(parent) && !matched.contains(parent)) {
+		 * V2N.put(valuenode, parent.getContent()); matched.add(parent); } else
+		 * { // sibling nodes List<BaseTreeNode> siblings =
+		 * valuenode.getSiblings(); for (BaseTreeNode sibling : siblings) {
+		 * DomTreeNode domTreeNode = (DomTreeNode) sibling; if
+		 * (nameNodes.contains(domTreeNode) && !matched.contains(domTreeNode)) {
+		 * V2N.put(valuenode, domTreeNode.getContent()); matched.add(parent);
+		 * break; } } } // default if (!V2N.containsKey(valuenode)) { String id
+		 * = valuenode.getId(); DomTreeNode cur = valuenode; while
+		 * (id.isEmpty()) { cur = (DomTreeNode) cur.getParent(); id =
+		 * cur.getId(); } V2N.put(valuenode, id); matched.add(cur); }
+		 */
+	}
+
+	public Set<DomTreeNode> value2name(List<DomTreeNode> valuelist) {
+		// one-to-one
+		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
 			public int compare(DomTreeNode node1, DomTreeNode node2) {
 				if (node1.getSombraid() == node2.getSombraid())
@@ -82,8 +126,7 @@ public class PageStructure {
 				// backward search
 				if (pos - offset >= 0) {
 					DomTreeNode candidate = sombraList.get(pos - offset);
-					if (candidate.getVPath().equals(valuenode.getVPath())
-							&& nameNodes.contains(candidate)
+					if (candidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(candidate)
 							&& !matched.contains(candidate)) {
 						matched.add(candidate);
 						V2N.put(valuenode, candidate.getContent());
@@ -93,50 +136,15 @@ public class PageStructure {
 				// forward search
 				if (pos + offset < sombraList.size()) {
 					DomTreeNode candidate = sombraList.get(pos + offset);
-					if (candidate.getVPath().equals(valuenode.getVPath())
-							&& nameNodes.contains(candidate)
+					if (candidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(candidate)
 							&& !matched.contains(candidate)) {
 						matched.add(candidate);
 						V2N.put(valuenode, candidate.getContent());
 						break;
 					}
 				}
-				
-				
+
 			}
-			//if (V2N.containsKey(valuenode)) {
-				//continue;
-			//}
-			continue;
-			// parent node
-			/*
-			DomTreeNode parent = (DomTreeNode) valuenode.getParent();
-			if (nameNodes.contains(parent) && !matched.contains(parent)) {
-				V2N.put(valuenode, parent.getContent());
-				matched.add(parent);
-			} else {	// sibling nodes
-				List<BaseTreeNode> siblings = valuenode.getSiblings();
-				for (BaseTreeNode sibling : siblings) {
-					DomTreeNode domTreeNode = (DomTreeNode) sibling;
-					if (nameNodes.contains(domTreeNode) && !matched.contains(domTreeNode)) {
-						V2N.put(valuenode, domTreeNode.getContent());
-						matched.add(parent);
-						break;
-					}
-				}
-			}
-			// default
-			if (!V2N.containsKey(valuenode)) {
-				String id = valuenode.getId();
-				DomTreeNode cur = valuenode;
-				while (id.isEmpty()) {
-					cur = (DomTreeNode) cur.getParent();
-					id = cur.getId();
-				}
-				V2N.put(valuenode, id);
-				matched.add(cur);
-			}
-			*/
 		}
 		return matched;
 	}
