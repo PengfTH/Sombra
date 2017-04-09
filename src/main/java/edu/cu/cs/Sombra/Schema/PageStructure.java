@@ -62,8 +62,11 @@ public class PageStructure {
 		for (DomTreeNode valuenode : valueNodes) {
 			// sombraid-based
 			List<DomTreeNode> sombraList = DomTree.getGoodNodes();
-			for (int i = sombraList.indexOf(valuenode) - 1; i >= 0; i--) {
-				DomTreeNode candidate = sombraList.get(i);
+			int pos = sombraList.indexOf(valuenode);
+			for (int offset = 0; pos - offset >= 0 && pos + offset < sombraList.size(); offset++) {
+				// backward search
+				
+				DomTreeNode candidate = sombraList.get(pos - offset);
 				if (candidate.getVPath().equals(valuenode.getVPath())
 						&& nameNodes.contains(candidate)
 						&& !matched.contains(candidate)) {
@@ -71,6 +74,18 @@ public class PageStructure {
 					V2N.put(valuenode, candidate.getContent());
 					break;
 				}
+				// forward search
+				candidate = sombraList.get(pos + offset);
+				if (candidate.getVPath().equals(valuenode.getVPath())
+						&& nameNodes.contains(candidate)
+						&& !matched.contains(candidate)) {
+					matched.add(candidate);
+					V2N.put(valuenode, candidate.getContent());
+					break;
+				}
+			}
+			for (int i = sombraList.indexOf(valuenode) - 1; i >= 0; i--) {
+				
 			}
 			if (V2N.containsKey(valuenode)) {
 				continue;

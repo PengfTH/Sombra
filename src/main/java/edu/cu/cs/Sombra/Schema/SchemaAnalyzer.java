@@ -25,12 +25,6 @@ public class SchemaAnalyzer {
 		
 		// match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
-			if (debug) {
-				System.out.println("**************");
-				tempNameNode.print();
-			}
-				
-
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode pageNode : pageNodes) {
@@ -46,17 +40,18 @@ public class SchemaAnalyzer {
 					}
 				}
 			}
-			
-			if (debug) {
-				System.out.println("name peernode score: " + simMax);
-				peernode.print();	
-			}
 				
 			
 
 			if (simMax > TemplateFeature.simThreshold && tempNameNode.content.equals(peernode.getContent())) {
 				page.nameNodes.add(peernode);
 				matched.add(peernode);
+				if (debug) {
+					System.out.println("**************");
+					tempNameNode.print();
+					System.out.println("name peernode score: " + simMax);
+					peernode.print();	
+				}
 			} else {
 				//page.nameNodes.clear();
 				//return false;
@@ -65,12 +60,6 @@ public class SchemaAnalyzer {
 
 		// match value nodes
 		for (TemplateFeature tempValueNode : tempValueNodes) {
-			if (debug) {
-				System.out.println("**************");
-				tempValueNode.print();
-			}
-				
-			
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode pageNode : pageNodes) {
@@ -87,16 +76,19 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			if (debug) {
-				System.out.println("value peernode score: " + simMax);
-				peernode.print();
-			}
+			
 			
 			
 
 			if (simMax > TemplateFeature.simThreshold) {
 				page.valueNodes.add(peernode);
 				matched.add(peernode);
+				if (debug) {
+					System.out.println("**************");
+					tempValueNode.print();
+					System.out.println("value peernode score: " + simMax);
+					peernode.print();
+				}
 			} else {
 				//page.nameNodes.clear();
 				//page.valueNodes.clear();
@@ -114,7 +106,7 @@ public class SchemaAnalyzer {
 		temp.pageAlign("1.html", "2.html");
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("2.html");
+		PageStructure page = new PageStructure("3.html");
 		TemplateFeature f1 = null;
 		TemplateFeature f2 = null;
 		for (TemplateFeature tempNameNode : temp.templateNameNodes) {
@@ -132,15 +124,19 @@ public class SchemaAnalyzer {
 			System.out.println("Name Nodes: ");
 			System.out.println(page.nameNodes.size());
 			for (DomTreeNode node : page.nameNodes) {
-				//node.print();
+				node.print();
 			}
 			System.out.println("Value Nodes");
 			System.out.println(page.valueNodes.size());
 			for (DomTreeNode node : page.valueNodes) {
-				//node.print();
+				node.print();
 			}
 		} else {
 			System.out.println("No match");
+		}
+		page.value2name();
+		for (DomTreeNode node : page.V2N.keySet()) {
+			System.out.println(page.V2N.get(node) + " : " + node.getContent());
 		}
 	}
 

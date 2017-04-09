@@ -72,7 +72,7 @@ public class TemplateStructure {
 			}
 
 		}
-		this.refine(page1, page2);
+		//this.refine(page1, page2);
 	}
 	
 	private void refine(PageStructure page1, PageStructure page2) {
