@@ -103,22 +103,10 @@ public class SchemaAnalyzer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure temp = new TemplateStructure();
-		temp.pageAlign("1.html", "2.html");
+		temp.pageAlign("3.html", "2.html");
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("3.html");
-		TemplateFeature f1 = null;
-		TemplateFeature f2 = null;
-		for (TemplateFeature tempNameNode : temp.templateNameNodes) {
-			//tempNameNode.print();
-			if (tempNameNode.hashCode() == 2122142350) {
-				if (f1 == null)
-					f1 = tempNameNode;
-				else
-					f2 = tempNameNode;
-			}
-		}
-		System.out.println(f1.equals(f2));
+		PageStructure page = new PageStructure("1.html");
 		analyzer.debug = true;
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("Name Nodes: ");
