@@ -72,7 +72,7 @@ public class PageStructure {
 				return -1;
 			}
 		});
-		Set<DomTreeNode> matched = this.value2name(valuelist);
+		Set<DomTreeNode> matched = this.value2name(valuelist, new HashSet<DomTreeNode>());
 
 		// 2nd round
 		valuelist.clear();
@@ -85,7 +85,7 @@ public class PageStructure {
 			nameNodes.remove(node);
 		}
 		valueNodes.addAll(valuelist);
-		matched.addAll(this.value2name(valuelist));
+		matched.addAll(this.value2name(valuelist, matched));
 		nameNodes.addAll(matched);
 		return matched;
 		// if (V2N.containsKey(valuenode)) {
@@ -108,9 +108,8 @@ public class PageStructure {
 		 */
 	}
 
-	public Set<DomTreeNode> value2name(List<DomTreeNode> valuelist) {
+	public Set<DomTreeNode> value2name(List<DomTreeNode> valuelist, Set<DomTreeNode> matched) {
 		// one-to-one
-		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
 		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
 			public int compare(DomTreeNode node1, DomTreeNode node2) {
 				if (node1.getSombraid() == node2.getSombraid())
