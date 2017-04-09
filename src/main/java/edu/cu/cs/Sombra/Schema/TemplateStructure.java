@@ -1,7 +1,9 @@
 package edu.cu.cs.Sombra.Schema;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
@@ -20,17 +22,19 @@ public class TemplateStructure {
 		List<DomTreeNode> goodNodes1 = domT1.getGoodNodes();
 		List<DomTreeNode> goodNodes2 = domT2.getGoodNodes();
 
-		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
+		Set<DomTreeNode> matched1 = new HashSet<DomTreeNode>();
+		Set<DomTreeNode> matched2 = new HashSet<DomTreeNode>();
+
+		Map<DomTreeNode, DomTreeNode> peermap12 = new HashMap<DomTreeNode, DomTreeNode>();
+		Map<DomTreeNode, DomTreeNode> peermap21 = new HashMap<DomTreeNode, DomTreeNode>();
+
+
 		for (DomTreeNode node1 : goodNodes1) {
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode node2 : goodNodes2) {
-				//System.out.println(node1.getContent() + " abc " + node2.getContent());
-				// one-to-one peer nodes
-				if (matched.contains(node2)) {
-					continue;
-				}
 				double sim = this.similarity(node1, node2);
+
 				if (sim > 999) {
 					simMax = sim;
 					peernode = node2;
@@ -42,9 +46,91 @@ public class TemplateStructure {
 					peernode = node2;
 				}
 			}
+			peermap12.put(node1, peernode);
+		}
+		
+		for (DomTreeNode node2 : goodNodes2) {
+			double simMax = -1;
+			DomTreeNode peernode = null;
+			for (DomTreeNode node1 : goodNodes1) {
+				double sim = this.similarity(node1, node2);
+
+				if (sim > 999) {
+					simMax = sim;
+					peernode = node1;
+					break;
+				}
+
+				if (sim > simMax) {
+					simMax = sim;
+					peernode = node1;
+				}
+			}
+			peermap21.put(node2, peernode);
+		}
+
+		for (DomTreeNode node1 : goodNodes1) {
+			DomTreeNode peernode = peermap12.get(node1);
+			if (peermap21.get(peernode).equals(node1)) {
+				double simMax = this.similarity(node1, peernode);
+				if (simMax > TemplateFeature.simThreshold) {
+					matched1.add(node1);
+					matched2.add(peernode);
+					// Name Node
+					if (node1.getContent().equals(peernode.getContent())) {
+						TemplateFeature nameNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
+								0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+						this.templateNameNodes.add(nameNode);
+					}
+					// Value Node
+					else {
+						TemplateFeature valueNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
+								0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+						this.templateValueNodes.add(valueNode);
+					}
+
+				}
+			}
+		}
+
+		for (DomTreeNode node1 : goodNodes1) {
+			if (matched1.contains(node1)) {
+				continue;
+			}
+
+			double simMax = -1;
+			DomTreeNode peernode = null;
+
+			if (!matched2.contains(peermap12.get(node1))) {
+				peernode = peermap12.get(node1);
+				simMax = this.similarity(node1, peernode);
+			} 
+			else {
+				for (DomTreeNode node2 : goodNodes2) {
+					// System.out.println(node1.getContent() + " ### " +
+					// node2.getContent());
+					// one-to-one peer nodes
+					if (matched2.contains(node2)) {
+						continue;
+					}
+					double sim = this.similarity(node1, node2);
+
+					if (sim > 999) {
+						simMax = sim;
+						peernode = node2;
+						break;
+					}
+
+					if (sim > simMax) {
+						simMax = sim;
+						peernode = node2;
+					}
+				}
+			}
 
 			if (simMax > TemplateFeature.simThreshold) {
-				matched.add(peernode);
+				matched1.add(node1);
+				matched2.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
 					TemplateFeature nameNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
@@ -57,30 +143,19 @@ public class TemplateStructure {
 							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
 					this.templateValueNodes.add(valueNode);
 				}
-				
-				/*System.out.println(node1.getTagPathString());
-				System.out.println(peernode.getTagPathString());
-				System.out.println(node1.getContent());
-				System.out.println(peernode.getContent());
-				System.out.println(node1.getVPath());
-				System.out.println(peernode.getVPath());
-				System.out.println(node1.getVWeight());
-				System.out.println(peernode.getVWeight());
-				System.out.println();*/
-				
-				
+
 			}
 
 		}
-		//this.refine(page1, page2);
+		// this.refine(page1, page2);
 	}
-	
+
 	private void refine(PageStructure page1, PageStructure page2) {
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
 		analyzer.analyze(page1, this);
 		analyzer.analyze(page2, this);
 		Set<DomTreeNode> temp = new HashSet<DomTreeNode>();
-		
+
 		Set<DomTreeNode> matched1 = page1.value2name();
 		Set<DomTreeNode> matched2 = page2.value2name();
 		temp.addAll(matched1);
@@ -90,7 +165,7 @@ public class TemplateStructure {
 			TemplateFeature nameNode = new TemplateFeature(node);
 			this.templateNameNodes.add(nameNode);
 		}
-		
+
 		Set<DomTreeNode> value1 = page1.V2N.keySet();
 		Set<DomTreeNode> value2 = page2.V2N.keySet();
 		temp.clear();
@@ -102,7 +177,6 @@ public class TemplateStructure {
 			this.templateValueNodes.add(valueNode);
 		}
 	}
-	
 
 	public double similarity(DomTreeNode node1, DomTreeNode node2) {
 		TemplateFeature nameNode1 = new TemplateFeature(node1);
@@ -112,7 +186,7 @@ public class TemplateStructure {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
-		test.pageAlign("1.html", "2.html");
+		test.pageAlign("a.html", "b.html");
 	}
 
 }
