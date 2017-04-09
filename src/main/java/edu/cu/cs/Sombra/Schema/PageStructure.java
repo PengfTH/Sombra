@@ -84,7 +84,9 @@ public class PageStructure {
 		for (DomTreeNode node : valuelist) {
 			nameNodes.remove(node);
 		}
+		valueNodes.addAll(valuelist);
 		matched.addAll(this.value2name(valuelist));
+		nameNodes.addAll(matched);
 		return matched;
 		// if (V2N.containsKey(valuenode)) {
 		// continue;
