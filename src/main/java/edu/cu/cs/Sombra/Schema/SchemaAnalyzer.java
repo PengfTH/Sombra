@@ -115,10 +115,19 @@ public class SchemaAnalyzer {
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
 		PageStructure page = new PageStructure("2.html");
+		TemplateFeature f1 = null;
+		TemplateFeature f2 = null;
 		for (TemplateFeature tempNameNode : temp.templateNameNodes) {
-			tempNameNode.print();
+			//tempNameNode.print();
+			if (tempNameNode.hashCode() == 2122142350) {
+				if (f1 == null)
+					f1 = tempNameNode;
+				else
+					f2 = tempNameNode;
+			}
 		}
-		//analyzer.debug = true;
+		System.out.println(f1.equals(f2));
+		analyzer.debug = true;
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("Name Nodes: ");
 			System.out.println(page.nameNodes.size());

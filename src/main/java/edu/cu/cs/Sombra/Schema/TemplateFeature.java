@@ -78,7 +78,16 @@ public class TemplateFeature {
 		if (!(other instanceof TemplateFeature))
 			return false;
 		TemplateFeature of = (TemplateFeature) other;
-		if (tagPath == of.tagPath && vWeight == of.vWeight && id == of.id
+		if (tagPath.equals(of.tagPath)) {
+			if (vWeight == of.vWeight) {
+				if (id.equals(of.id)) {
+					if (content.equals(of.content)) {
+						return true;
+					}
+				}
+			}
+		}
+		if (tagPath == of.tagPath && vWeight == of.vWeight && id.equals(of.id)
 				&& content.equals(of.content))
 			return true;
 		return false;
