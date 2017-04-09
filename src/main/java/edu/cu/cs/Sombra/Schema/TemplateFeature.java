@@ -1,5 +1,7 @@
 package edu.cu.cs.Sombra.Schema;
 
+import java.util.Objects;
+
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import info.debatty.java.stringsimilarity.Levenshtein;
 
@@ -70,4 +72,22 @@ public class TemplateFeature {
 		
 		return res;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof TemplateFeature))
+			return false;
+		TemplateFeature of = (TemplateFeature) other;
+		if (tagPath == of.tagPath && vWeight == of.vWeight && id == of.id
+				&& content.equals(of.content))
+			return true;
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(vPath, vWeight, tagPath, id, content);
+	}
+	
+	
 }

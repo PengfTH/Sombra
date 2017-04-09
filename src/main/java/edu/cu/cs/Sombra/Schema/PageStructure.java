@@ -108,7 +108,7 @@ public class PageStructure {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PageStructure test = new PageStructure("amazon.html");
+		PageStructure test = new PageStructure("3.html");
 		// test.getDomTree().traverse();
 		/*
 		 * for (VisualTreeNode vnode : test.getV2D().keySet()) {

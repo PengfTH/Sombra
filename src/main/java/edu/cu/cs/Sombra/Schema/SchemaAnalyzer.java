@@ -7,7 +7,7 @@ import java.util.Set;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 
 public class SchemaAnalyzer {
-
+	public boolean debug = false;
 	public SchemaAnalyzer() {
 
 	}
@@ -17,15 +17,19 @@ public class SchemaAnalyzer {
 		Set<TemplateFeature> tempValueNodes = temp.templateValueNodes;
 		Set<TemplateFeature> tempNameNodes = temp.templateNameNodes;
 		
-		System.out.println("Temp Name Node size: " + tempNameNodes.size());
+		if (debug) 
+			System.out.println("Temp Name Node size: " + tempNameNodes.size());
 		
 
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
-
+		
 		// match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
-			System.out.println("**************");
-			tempNameNode.print();
+			if (debug) {
+				System.out.println("**************");
+				tempNameNode.print();
+			}
+				
 
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -43,8 +47,11 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("name peernode score: " + simMax);
-			peernode.print();		
+			if (debug) {
+				System.out.println("name peernode score: " + simMax);
+				peernode.print();	
+			}
+				
 			
 
 			if (simMax > TemplateFeature.simThreshold && tempNameNode.content.equals(peernode.getContent())) {
@@ -58,8 +65,11 @@ public class SchemaAnalyzer {
 
 		// match value nodes
 		for (TemplateFeature tempValueNode : tempValueNodes) {
-			System.out.println("**************");
-			tempValueNode.print();
+			if (debug) {
+				System.out.println("**************");
+				tempValueNode.print();
+			}
+				
 			
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -77,8 +87,11 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("value peernode score: " + simMax);
-			peernode.print();
+			if (debug) {
+				System.out.println("value peernode score: " + simMax);
+				peernode.print();
+			}
+			
 			
 
 			if (simMax > TemplateFeature.simThreshold) {
@@ -101,7 +114,11 @@ public class SchemaAnalyzer {
 		temp.pageAlign("1.html", "2.html");
 		System.out.println("Template generated");
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("3.html");
+		PageStructure page = new PageStructure("2.html");
+		for (TemplateFeature tempNameNode : temp.templateNameNodes) {
+			tempNameNode.print();
+		}
+		//analyzer.debug = true;
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("Name Nodes: ");
 			System.out.println(page.nameNodes.size());

@@ -25,6 +25,7 @@ public class TemplateStructure {
 			double simMax = -1;
 			DomTreeNode peernode = null;
 			for (DomTreeNode node2 : goodNodes2) {
+				//System.out.println(node1.getContent() + " abc " + node2.getContent());
 				// one-to-one peer nodes
 				if (matched.contains(node2)) {
 					continue;
