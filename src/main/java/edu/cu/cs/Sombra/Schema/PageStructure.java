@@ -79,8 +79,11 @@ public class PageStructure {
 		for (DomTreeNode node : nameNodes) {
 			if (!matched.contains(node)) {
 				valuelist.add(node);
+			} else {
+				System.out.println(node.getContent());
 			}
 		}
+		
 		for (DomTreeNode node : valuelist) {
 			nameNodes.remove(node);
 		}
@@ -123,28 +126,54 @@ public class PageStructure {
 			// sombraid-based
 			List<DomTreeNode> sombraList = DomTree.getGoodNodes();
 			int pos = sombraList.indexOf(valuenode);
-			for (int offset = 1; pos - offset >= 0 || pos + offset < sombraList.size(); offset++) {
-				// backward search
-				if (pos - offset >= 0) {
-					DomTreeNode candidate = sombraList.get(pos - offset);
-					if (candidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(candidate)
-							&& !matched.contains(candidate)) {
-						matched.add(candidate);
-						V2N.put(valuenode, candidate.getContent());
+			int back = pos - 1;
+			int ford = pos + 1;
+			boolean ismatch = false;
+			while (back >= 0 && ford < sombraList.size()) {
+				DomTreeNode backCandidate = sombraList.get(back);
+				DomTreeNode forwCandidate = sombraList.get(ford);
+				if (backCandidate.getSombraid() - valuenode.getSombraid() 
+						<= forwCandidate.getSombraid() - valuenode.getSombraid()) {
+					if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
+							&& !matched.contains(backCandidate)) {
+						matched.add(backCandidate);
+						V2N.put(valuenode, backCandidate.getContent());
+						ismatch = true;
+						break;
+					} 
+					back--;
+				} else {
+					if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
+							&& !matched.contains(forwCandidate)) {
+						matched.add(forwCandidate);
+						V2N.put(valuenode, forwCandidate.getContent());
+						ismatch = true;
 						break;
 					}
+					ford++;
 				}
-				// forward search
-				if (pos + offset < sombraList.size()) {
-					DomTreeNode candidate = sombraList.get(pos + offset);
-					if (candidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(candidate)
-							&& !matched.contains(candidate)) {
-						matched.add(candidate);
-						V2N.put(valuenode, candidate.getContent());
-						break;
-					}
+			}
+			while (!ismatch && back >= 0) {
+				DomTreeNode backCandidate = sombraList.get(back);
+				if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
+						&& !matched.contains(backCandidate)) {
+					matched.add(backCandidate);
+					V2N.put(valuenode, backCandidate.getContent());
+					ismatch = true;
+					break;
+				} 
+				back--;
+			}
+			while (!ismatch && ford < sombraList.size()) {
+				DomTreeNode forwCandidate = sombraList.get(ford);
+				if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
+						&& !matched.contains(forwCandidate)) {
+					matched.add(forwCandidate);
+					V2N.put(valuenode, forwCandidate.getContent());
+					ismatch = true;
+					break;
 				}
-
+				ford++;
 			}
 		}
 		return matched;
