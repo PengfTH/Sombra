@@ -20,8 +20,8 @@ public class SchemaAnalyzer {
 
 		// match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
-			System.out.println("**************");
-			tempNameNode.print();
+			//System.out.println("**************");
+			//tempNameNode.print();
 
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -39,8 +39,8 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("name peernode score: " + simMax);
-			peernode.print();
+			//System.out.println("name peernode score: " + simMax);
+			//peernode.print();
 			
 			
 			
@@ -56,8 +56,8 @@ public class SchemaAnalyzer {
 
 		// match value nodes
 		for (TemplateFeature tempValueNode : tempValueNodes) {
-			System.out.println("**************");
-			tempValueNode.print();
+			//System.out.println("**************");
+			//tempValueNode.print();
 			
 			double simMax = -1;
 			DomTreeNode peernode = null;
@@ -75,8 +75,8 @@ public class SchemaAnalyzer {
 				}
 			}
 			
-			System.out.println("value peernode score: " + simMax);
-			peernode.print();
+			//System.out.println("value peernode score: " + simMax);
+			//peernode.print();
 			
 			
 

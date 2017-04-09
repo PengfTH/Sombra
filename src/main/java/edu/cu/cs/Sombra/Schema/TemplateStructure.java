@@ -83,7 +83,7 @@ public class TemplateStructure {
 		temp.addAll(matched1);
 		temp.addAll(matched2);
 		this.templateNameNodes.clear();
-		for (DomTreeNode node : matched1) {
+		for (DomTreeNode node : temp) {
 			TemplateFeature nameNode = new TemplateFeature(node);
 			this.templateNameNodes.add(nameNode);
 		}
@@ -94,7 +94,7 @@ public class TemplateStructure {
 		temp.addAll(value1);
 		temp.addAll(value2);
 		this.templateValueNodes.clear();
-		for (DomTreeNode node : value1) {
+		for (DomTreeNode node : temp) {
 			TemplateFeature valueNode = new TemplateFeature(node);
 			this.templateValueNodes.add(valueNode);
 		}
