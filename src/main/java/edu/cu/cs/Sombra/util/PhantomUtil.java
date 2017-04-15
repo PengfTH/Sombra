@@ -37,4 +37,9 @@ public class PhantomUtil {
 		phantom.get(url);
 		return phantom.findElements(By.cssSelector("*"));
 	}
+	
+	public static void close() {
+		if (PhantomUtil.phantom != null)
+			PhantomUtil.phantom.close();
+	}
 }

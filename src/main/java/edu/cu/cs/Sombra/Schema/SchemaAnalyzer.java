@@ -151,7 +151,7 @@ public class SchemaAnalyzer {
 			System.out.println("*****************Name Nodes*****************");
 			System.out.println(page.nameNodes.size());
 			for (DomTreeNode node : page.nameNodes) {
-				node.print();
+				//node.print();
 			}
 			System.out.println("*****************Value Nodes*****************");
 			System.out.println(page.valueNodes.size());

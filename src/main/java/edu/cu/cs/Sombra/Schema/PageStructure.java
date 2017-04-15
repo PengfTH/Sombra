@@ -16,6 +16,7 @@ import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 import edu.cu.cs.Sombra.VisualTree.VisualTree;
 import edu.cu.cs.Sombra.VisualTree.VisualTreeNode;
+import edu.cu.cs.Sombra.util.PhantomUtil;
 
 public class PageStructure {
 
@@ -46,7 +47,8 @@ public class PageStructure {
 			if (element != null) {
 				((DomTreeNode) domNode).setVWeight(element.getSize().getHeight() * element.getSize().getWidth());
 			} else {
-				((DomTreeNode) domNode).setVWeight(0);
+				((DomTreeNode) domNode).setVWeight(-1);
+				continue;
 			}
 			
 			for (BaseTreeNode vNode : vLeafNodes) {
@@ -61,7 +63,8 @@ public class PageStructure {
 			}
 			
 		}
-		System.out.println(this.DomTree.getGoodNodes().size());
+		//System.out.println(this.DomTree.getGoodNodes().size());
+		//PhantomUtil.close();
 	}
 
 	public DomTree getDomTree() {

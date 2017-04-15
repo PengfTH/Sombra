@@ -8,6 +8,7 @@ import java.util.Map;
 import org.fit.vips.Vips;
 import org.openqa.selenium.WebElement;
 
+import edu.cu.cs.Sombra.Schema.TemplateStructure;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 import edu.cu.cs.Sombra.util.PhantomUtil;
 
@@ -67,9 +68,11 @@ public class VisualTree extends BaseTreeNode {
 		VisualTree tree = parser.parse(outputFilename + ".xml");
 		
 		// invoke phantom render and fill map
+		String currentDir = System.getProperty("user.dir");
+		System.out.println(currentDir);
 		
 		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
-		List<WebElement> elements = PhantomUtil.render(filename);
+		List<WebElement> elements = PhantomUtil.render("file:" + File.separator + File.separator + currentDir + File.separator + "modified_" + filename);
 		for (WebElement we : elements) {
 			String idx = we.getAttribute("sombraid");
 			if (idx != null)
@@ -164,5 +167,11 @@ public class VisualTree extends BaseTreeNode {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		VisualTree.getVisualTree("1.html");
+		
 	}
 }
