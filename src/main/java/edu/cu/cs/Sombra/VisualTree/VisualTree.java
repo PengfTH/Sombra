@@ -69,10 +69,24 @@ public class VisualTree extends BaseTreeNode {
 		
 		// invoke phantom render and fill map
 		String currentDir = System.getProperty("user.dir");
-		System.out.println(currentDir);
+		//System.out.println(currentDir);
 		
 		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
-		List<WebElement> elements = PhantomUtil.render("file:" + File.separator + File.separator + currentDir + File.separator + "modified_" + filename);
+		String fileurl = "file:" + File.separator + File.separator + currentDir + File.separator + "modified_" + filename;
+		System.out.println(fileurl);
+		List<WebElement> elements = PhantomUtil.render(fileurl);
+		System.out.println(elements.size());
+		for (WebElement element : elements) {
+        	System.out.println(element.getText());
+            System.out.println(element.getLocation().x + ", " + element.getLocation().y);
+            System.out.println(element.getSize().width);
+            System.out.println(element.getSize().height);
+            System.out.println(element.getSize().getWidth());
+            System.out.println(element.getSize().getHeight());
+            System.out.println(element.getAttribute("sombraid"));
+            System.out.println("*******");
+        }
+		
 		for (WebElement we : elements) {
 			String idx = we.getAttribute("sombraid");
 			if (idx != null)
