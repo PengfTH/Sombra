@@ -67,6 +67,7 @@ public class VisualTree extends BaseTreeNode {
 		VisualTree tree = parser.parse(outputFilename + ".xml");
 		
 		// invoke phantom render and fill map
+		
 		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
 		List<WebElement> elements = PhantomUtil.render(filename);
 		for (WebElement we : elements) {
@@ -75,6 +76,7 @@ public class VisualTree extends BaseTreeNode {
 				idx2we.put(Integer.parseInt(idx), we);
 		}
 		tree.idx2we = idx2we;
+		
 		return tree;
 	}
 
