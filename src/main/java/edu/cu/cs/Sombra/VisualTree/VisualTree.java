@@ -1,10 +1,15 @@
 package edu.cu.cs.Sombra.VisualTree;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.fit.vips.Vips;
+import org.openqa.selenium.WebElement;
 
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
+import edu.cu.cs.Sombra.util.PhantomUtil;
 
 public class VisualTree extends BaseTreeNode {
 	private int pageRectHeight;
@@ -16,7 +21,8 @@ public class VisualTree extends BaseTreeNode {
 	private int windowHeight;
 	private int windowWidth;
 	private int order;
-
+	public Map<Integer, WebElement> idx2we;
+	
 	public VisualTree() {
 		super(null, 0);
 		this.init();
@@ -56,9 +62,20 @@ public class VisualTree extends BaseTreeNode {
 			}
 		}
 
+		// parse visual xml file
 		VisualTreeParser parser = new VisualTreeParser();
-		return parser.parse(outputFilename + ".xml");
-
+		VisualTree tree = parser.parse(outputFilename + ".xml");
+		
+		// invoke phantom render and fill map
+		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
+		List<WebElement> elements = PhantomUtil.render(filename);
+		for (WebElement we : elements) {
+			String idx = we.getAttribute("sombraid");
+			if (idx != null)
+				idx2we.put(Integer.parseInt(idx), we);
+		}
+		tree.idx2we = idx2we;
+		return tree;
 	}
 
 	public void setPageRectHeight(int value) {
