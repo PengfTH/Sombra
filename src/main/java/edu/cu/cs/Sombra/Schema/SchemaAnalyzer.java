@@ -8,6 +8,7 @@ import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 
 public class SchemaAnalyzer {
 	public boolean debug = false;
+
 	public SchemaAnalyzer() {
 
 	}
@@ -16,13 +17,12 @@ public class SchemaAnalyzer {
 		List<DomTreeNode> pageNodes = page.getDomTree().getGoodNodes();
 		Set<TemplateFeature> tempValueNodes = temp.templateValueNodes;
 		Set<TemplateFeature> tempNameNodes = temp.templateNameNodes;
-		
-		if (debug) 
+
+		if (debug)
 			System.out.println("Temp Name Node size: " + tempNameNodes.size());
-		
 
 		Set<DomTreeNode> matched = new HashSet<DomTreeNode>();
-		
+
 		// match name nodes
 		for (TemplateFeature tempNameNode : tempNameNodes) {
 			double simMax = -1;
@@ -40,21 +40,19 @@ public class SchemaAnalyzer {
 					}
 				}
 			}
-				
-			
 
-			if (simMax > TemplateFeature.simThreshold && tempNameNode.content.equals(peernode.getContent())) {
+			if (simMax > TemplateFeature.simThresholdName && tempNameNode.content.equals(peernode.getContent())) {
 				page.nameNodes.add(peernode);
 				matched.add(peernode);
 				if (debug) {
 					System.out.println("**************");
 					tempNameNode.print();
 					System.out.println("name peernode score: " + simMax);
-					peernode.print();	
+					peernode.print();
 				}
 			} else {
-				//page.nameNodes.clear();
-				//return false;
+				// page.nameNodes.clear();
+				// return false;
 			}
 		}
 
@@ -75,12 +73,8 @@ public class SchemaAnalyzer {
 					}
 				}
 			}
-			
-			
-			
-			
 
-			if (simMax > TemplateFeature.simThreshold) {
+			if (simMax > TemplateFeature.simThresholdValue) {
 				page.valueNodes.add(peernode);
 				matched.add(peernode);
 				if (debug) {
@@ -90,12 +84,45 @@ public class SchemaAnalyzer {
 					peernode.print();
 				}
 			} else {
-				//page.nameNodes.clear();
-				//page.valueNodes.clear();
-				//return false;
+				// page.nameNodes.clear();
+				// page.valueNodes.clear();
+				// return false;
 			}
 
 		}
+
+		// potential name and value nodes	
+		for (DomTreeNode node : pageNodes) {
+			// compare with Template Name Nodes
+			if (matched.contains(node)) {
+				continue;
+			}
+			for (TemplateFeature tempName : temp.templateNameNodes) {
+				if (tempName.tagPath.equals(node.getTagPathString())
+						&& tempName.vPath.substring(0, tempName.vPath.lastIndexOf('-'))
+								.equals(node.getVPath().substring(0, node.getVPath().lastIndexOf('-')))) {
+					matched.add(node);
+					page.nameNodes.add(node);
+					break;
+				}
+			}
+
+			// compare with Template Value Nodes
+			if (matched.contains(node)) {
+				continue;
+			}
+			for (TemplateFeature tempValue : temp.templateValueNodes) {
+				if (tempValue.tagPath.equals(node.getTagPathString())
+						&& tempValue.vPath.substring(0, tempValue.vPath.lastIndexOf('-'))
+								.equals(node.getVPath().substring(0, node.getVPath().lastIndexOf('-')))) {
+					matched.add(node);
+					page.valueNodes.add(node);
+					break;
+				}
+			}
+			
+		}
+		
 
 		return true;
 	}
@@ -103,21 +130,33 @@ public class SchemaAnalyzer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure temp = new TemplateStructure();
-		temp.pageAlign("a.html", "b.html");
+		temp.pageAlign("1.html", "2.html");
 		System.out.println("Template generated");
+		
+		System.out.println("*****************Template Name Nodes*****************");
+		System.out.println(temp.templateNameNodes.size());
+		for (TemplateFeature name : temp.templateNameNodes) {
+			//name.print();
+		}
+		System.out.println("*****************Template Value Nodes*****************");
+		System.out.println(temp.templateValueNodes.size());
+		for (TemplateFeature value : temp.templateValueNodes) {
+			//value.print();
+		}
+		
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("c.html");
-		//analyzer.debug = true;
+		PageStructure page = new PageStructure("5.html");
+		analyzer.debug = false;
 		if (analyzer.analyze(page, temp)) {
-			System.out.println("Name Nodes: ");
+			System.out.println("*****************Name Nodes*****************");
 			System.out.println(page.nameNodes.size());
 			for (DomTreeNode node : page.nameNodes) {
 				node.print();
 			}
-			System.out.println("Value Nodes");
+			System.out.println("*****************Value Nodes*****************");
 			System.out.println(page.valueNodes.size());
 			for (DomTreeNode node : page.valueNodes) {
-				node.print();
+				//node.print();
 			}
 		} else {
 			System.out.println("No match");

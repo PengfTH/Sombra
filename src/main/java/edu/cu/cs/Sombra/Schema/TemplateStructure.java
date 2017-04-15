@@ -28,6 +28,7 @@ public class TemplateStructure {
 		Map<DomTreeNode, DomTreeNode> peermap12 = new HashMap<DomTreeNode, DomTreeNode>();
 		Map<DomTreeNode, DomTreeNode> peermap21 = new HashMap<DomTreeNode, DomTreeNode>();
 
+		// One-to-one match
 
 		for (DomTreeNode node1 : goodNodes1) {
 			double simMax = -1;
@@ -73,7 +74,7 @@ public class TemplateStructure {
 			DomTreeNode peernode = peermap12.get(node1);
 			if (peermap21.get(peernode).equals(node1)) {
 				double simMax = this.similarity(node1, peernode);
-				if (simMax > TemplateFeature.simThreshold) {
+				if (simMax > TemplateFeature.simThresholdName) {
 					matched1.add(node1);
 					matched2.add(peernode);
 					// Name Node
@@ -128,7 +129,7 @@ public class TemplateStructure {
 				}
 			}
 
-			if (simMax > TemplateFeature.simThreshold) {
+			if (simMax > TemplateFeature.simThresholdValue) {
 				matched1.add(node1);
 				matched2.add(peernode);
 				// Name Node
@@ -186,7 +187,7 @@ public class TemplateStructure {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure test = new TemplateStructure();
-		test.pageAlign("a.html", "b.html");
+		test.pageAlign("1.html", "2.html");
 	}
 
 }

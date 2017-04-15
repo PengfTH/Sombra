@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openqa.selenium.WebElement;
+
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
@@ -40,17 +42,24 @@ public class PageStructure {
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
 		for (BaseTreeNode domNode : domLeafNodes) {
 			int sombraid = ((DomTreeNode) domNode).getSombraid();
+			WebElement element = this.VTree.idx2we.get(sombraid);
+			if (element != null) {
+				((DomTreeNode) domNode).setVWeight(element.getSize().getHeight() * element.getSize().getWidth());
+			} else {
+				((DomTreeNode) domNode).setVWeight(0);
+			}
+			
 			for (BaseTreeNode vNode : vLeafNodes) {
 				List<Integer> list = ((VisualTreeNode) vNode).getSombraIds();
 				if (list.contains(sombraid)) {
 					((DomTreeNode) domNode).setVPath(((VisualTreeNode) vNode).getID());
-					((DomTreeNode) domNode).setVWeight(
-							((VisualTreeNode) vNode).getRectHeight() * ((VisualTreeNode) vNode).getRectWidth());
+					//((DomTreeNode) domNode).setVWeight(((VisualTreeNode) vNode).getRectHeight() * ((VisualTreeNode) vNode).getRectWidth());
 					this.DomTree.addGoodNodes((DomTreeNode) domNode);
 					// System.out.println(((DomTreeNode) domNode).getSRC());
 					break;
 				}
 			}
+			
 		}
 		System.out.println(this.DomTree.getGoodNodes().size());
 	}
@@ -80,7 +89,7 @@ public class PageStructure {
 			if (!matched.contains(node)) {
 				valuelist.add(node);
 			} else {
-				System.out.println(node.getContent());
+				//System.out.println(node.getContent());
 			}
 		}
 
@@ -147,7 +156,7 @@ public class PageStructure {
 			int pos = sombraList.indexOf(valuenode);
 			int back = pos - 1;
 			int ford = pos + 1;
-			int thredDis = 40;
+			int thredDis = 30;
 			boolean ismatch = false;
 			
 			while (back >= 0 && ford < sombraList.size()) {

@@ -16,7 +16,8 @@ public class TemplateFeature {
 	public static final double vPathPara = 1;
 	public static final double vWeightPara = 1;
 	public static final double contentPara = 1;
-	public static final double simThreshold = (double) 2;
+	public static final double simThresholdName = (double) 1.9;
+	public static final double simThresholdValue = (double) 0.9;
 	
 	protected Levenshtein leven = new Levenshtein();
 
