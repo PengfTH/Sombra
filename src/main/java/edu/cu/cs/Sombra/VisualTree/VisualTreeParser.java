@@ -20,16 +20,6 @@ public class VisualTreeParser {
 		System.out.println(vtree.toString());
 	}
 	
-	private VisualTree parse(Document doc) {
-		doc.getDocumentElement().normalize();
-		NodeList nodes = doc.getElementsByTagName(VisualTreeConstant.ELEM_VISUALTREE);
-		if (nodes.getLength() == 0) {
-			System.out.println("Tag: " + VisualTreeConstant.ELEM_VISUALTREE + " not found");
-			return null;
-		}
-		return parseVisualTree(nodes.item(0));
-	}
-	
 	public VisualTree parse(String path) {
 		try {
 			File file = new File(path);
@@ -42,6 +32,16 @@ public class VisualTreeParser {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private VisualTree parse(Document doc) {
+		doc.getDocumentElement().normalize();
+		NodeList nodes = doc.getElementsByTagName(VisualTreeConstant.ELEM_VISUALTREE);
+		if (nodes.getLength() == 0) {
+			System.out.println("Tag: " + VisualTreeConstant.ELEM_VISUALTREE + " not found");
+			return null;
+		}
+		return parseVisualTree(nodes.item(0));
 	}
 	
 	private VisualTree parseVisualTree(Node node) {
