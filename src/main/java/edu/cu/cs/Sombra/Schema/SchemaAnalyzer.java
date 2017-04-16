@@ -132,7 +132,7 @@ public class SchemaAnalyzer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure temp = new TemplateStructure();
-		temp.pageAlign("1.html", "2.html");
+		temp.pageAlign("a.html", "b.html");
 		System.out.println("Template generated");
 		
 		System.out.println("*****************Template Name Nodes*****************");
@@ -147,7 +147,7 @@ public class SchemaAnalyzer {
 		}
 		
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("3.html");
+		PageStructure page = new PageStructure("c.html");
 		analyzer.debug = false;
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("*****************Name Nodes*****************");
