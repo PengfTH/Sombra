@@ -80,14 +80,12 @@ public class TemplateStructure {
 					matched2.add(peernode);
 					// Name Node
 					if (node1.getContent().equals(peernode.getContent())) {
-						TemplateFeature nameNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
-								0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+						TemplateFeature nameNode = new TemplateFeature(node1, peernode);
 						this.templateNameNodes.add(nameNode);
 					}
 					// Value Node
 					else {
-						TemplateFeature valueNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
-								0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+						TemplateFeature valueNode = new TemplateFeature(node1, peernode);
 						this.templateValueNodes.add(valueNode);
 					}
 
@@ -135,14 +133,12 @@ public class TemplateStructure {
 				matched2.add(peernode);
 				// Name Node
 				if (node1.getContent().equals(peernode.getContent())) {
-					TemplateFeature nameNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+					TemplateFeature nameNode = new TemplateFeature(node1, peernode);
 					this.templateNameNodes.add(nameNode);
 				}
 				// Value Node
 				else {
-					TemplateFeature valueNode = new TemplateFeature(node1.getTagPathString(), node1.getVPath(),
-							0.5 * (node1.getVWeight() + peernode.getVWeight()), node1.getId(), node1.getContent());
+					TemplateFeature valueNode = new TemplateFeature(node1, peernode);
 					this.templateValueNodes.add(valueNode);
 				}
 

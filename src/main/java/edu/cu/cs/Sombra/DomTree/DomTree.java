@@ -72,8 +72,12 @@ public class DomTree {
 		this.goodNodes.add(node);
 	}
 	
-	public 	List<DomTreeNode> getGoodNodes() {
+	public List<DomTreeNode> getGoodNodes() {
 		return this.goodNodes;
+	}
+	
+	public void setGoodNodes(List<DomTreeNode> newgood) {
+		this.goodNodes = newgood;
 	}
 	
 	public void traverse() {
