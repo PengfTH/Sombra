@@ -16,6 +16,10 @@ public class PhantomFeature {
 		this.width = w;
 		this.height = h;
 	}
+	
+	public double distance(PhantomFeature pf) {
+		return (x - pf.x) * (x - pf.x) + (y - pf.y) * (y - pf.y);
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

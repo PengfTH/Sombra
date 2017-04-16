@@ -114,15 +114,6 @@ public class PageStructure {
 		// one-to-one
 		List<DomTreeNode> valuelist = new ArrayList<DomTreeNode>();
 		valuelist.addAll(valueNodes);
-		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
-			public int compare(DomTreeNode node1, DomTreeNode node2) {
-				if (node1.getSombraid() == node2.getSombraid())
-					return 0;
-				if (node1.getSombraid() > node2.getSombraid())
-					return 1;
-				return -1;
-			}
-		});
 		Set<DomTreeNode> matched = this.value2name(valuelist, new HashSet<DomTreeNode>());
 
 		// 2nd round
@@ -130,8 +121,6 @@ public class PageStructure {
 		for (DomTreeNode node : nameNodes) {
 			if (!matched.contains(node)) {
 				valuelist.add(node);
-			} else {
-				// System.out.println(node.getContent());
 			}
 		}
 
@@ -142,28 +131,11 @@ public class PageStructure {
 		matched.addAll(this.value2name(valuelist, matched));
 		nameNodes.addAll(matched);
 		return matched;
-		// if (V2N.containsKey(valuenode)) {
-		// continue;
-		// }
-		// parent node
-		/*
-		 * DomTreeNode parent = (DomTreeNode) valuenode.getParent(); if
-		 * (nameNodes.contains(parent) && !matched.contains(parent)) {
-		 * V2N.put(valuenode, parent.getContent()); matched.add(parent); } else
-		 * { // sibling nodes List<BaseTreeNode> siblings =
-		 * valuenode.getSiblings(); for (BaseTreeNode sibling : siblings) {
-		 * DomTreeNode domTreeNode = (DomTreeNode) sibling; if
-		 * (nameNodes.contains(domTreeNode) && !matched.contains(domTreeNode)) {
-		 * V2N.put(valuenode, domTreeNode.getContent()); matched.add(parent);
-		 * break; } } } // default if (!V2N.containsKey(valuenode)) { String id
-		 * = valuenode.getId(); DomTreeNode cur = valuenode; while
-		 * (id.isEmpty()) { cur = (DomTreeNode) cur.getParent(); id =
-		 * cur.getId(); } V2N.put(valuenode, id); matched.add(cur); }
-		 */
 	}
 
-	private int nodeDistance(DomTreeNode node1, DomTreeNode node2) {
-		int level = 0;
+	private double nodeDistance(DomTreeNode node1, DomTreeNode node2) {
+		double dist = 0.0;
+		/*
 		DomTreeNode parent1 = node1;
 		DomTreeNode parent2 = node2;
 		while (parent1 != null && parent2 != null) {
@@ -176,12 +148,54 @@ public class PageStructure {
 			} else {
 				parent2 = (DomTreeNode) parent2.getParent();
 			}
-			level++;
+			diff++;
 		}
-		return level * 10 + Math.abs(node1.getSombraid() - node2.getSombraid());
+		while (parent1 != null) {
+			parent1 = (DomTreeNode) parent1.getParent();
+			diff++;
+		}
+		while (parent2 != null) {
+			parent2 = (DomTreeNode) parent2.getParent();
+			diff++;
+		}
+		*/
+		dist += Math.abs(node1.getVWeight() - node2.getVWeight());
+		dist += node1.pf.distance(node2.pf);
+		return dist;
 	}
 
 	private Set<DomTreeNode> value2name(List<DomTreeNode> valuelist, Set<DomTreeNode> matched) {
+		// one-to-one
+		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
+			public int compare(DomTreeNode node1, DomTreeNode node2) {
+				if (node1.getSombraid() == node2.getSombraid())
+					return 0;
+				if (node1.getSombraid() > node2.getSombraid())
+					return 1;
+				return -1;
+			}
+		});
+		double minDist = -1;
+		DomTreeNode candidate = null;
+		for (DomTreeNode valuenode : valuelist) {
+			// sombraid-based
+			for (DomTreeNode namenode : nameNodes) {
+				if (matched.contains(namenode)) 
+					continue;
+				double dist = nodeDistance(valuenode, namenode);
+				if (minDist == -1 || minDist > dist) {
+					minDist = dist;
+					candidate = namenode;
+				}
+			}
+			V2N.put(valuenode, candidate.getContent());
+			matched.add(candidate);
+		}
+		
+		return matched;
+	}
+	
+	private Set<DomTreeNode> value2name1(List<DomTreeNode> valuelist, Set<DomTreeNode> matched) {
 		// one-to-one
 		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
 			public int compare(DomTreeNode node1, DomTreeNode node2) {
@@ -247,6 +261,7 @@ public class PageStructure {
 				ford++;
 			}
 		}
+		
 		return matched;
 	}
 
