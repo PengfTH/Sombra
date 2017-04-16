@@ -99,11 +99,16 @@ public class PageStructure {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// System.out.println("idx2pf size = " + this.idx2pf.size());
+			
+			List<DomTreeNode> newgood = new ArrayList<DomTreeNode>();
+			for (DomTreeNode good : this.DomTree.getGoodNodes()) {
+				if (good.pf != null) {
+					newgood.add(good);
+				}
+			}			
+			this.DomTree.setGoodNodes(newgood);
 		}
 
-		// System.out.println(this.DomTree.getGoodNodes().size());
-		// PhantomUtil.close();
 	}
 
 	public DomTree getDomTree() {
