@@ -1,6 +1,7 @@
 /target/
 *.html
 *.txt
+*.json
 *.html.xml
 *.log
 /bin/*
