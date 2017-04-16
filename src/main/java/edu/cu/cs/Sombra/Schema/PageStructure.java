@@ -99,13 +99,13 @@ public class PageStructure {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			List<DomTreeNode> newgood = new ArrayList<DomTreeNode>();
 			for (DomTreeNode good : this.DomTree.getGoodNodes()) {
 				if (good.pf != null) {
 					newgood.add(good);
 				}
-			}			
+			}
 			this.DomTree.setGoodNodes(newgood);
 		}
 
@@ -130,13 +130,46 @@ public class PageStructure {
 		}
 
 		matched.addAll(this.value2name(valuelist, matched));
-		nameNodes.addAll(matched);
+		// nameNodes.addAll(matched);
+		// potential name and value nodes
+		for (DomTreeNode node : this.DomTree.getGoodNodes()) {
+			if (matched.contains(node)) {
+				continue;
+			}
+			for (DomTreeNode mnode : matched) {
+				if (mnode.getTagPathString().equals(node.getTagPathString())
+						&& mnode.getVPath().substring(0, mnode.getVPath().lastIndexOf('-'))
+								.equals(node.getVPath().substring(0, node.getVPath().lastIndexOf('-')))) {
+					if (nameNodes.contains(mnode)) {
+						nameNodes.add(node);
+					} else {
+						valueNodes.add(node);
+					}
+				}
+			}
+
+		}
+
+		valuelist.clear();
+		valuelist.addAll(valueNodes);
+		matched.addAll(this.value2name(valuelist, matched));
+		
+		for (DomTreeNode valuenode : valueNodes) {
+			if (matched.contains(valuenode))
+				continue;
+			if (valuenode.getId() != null && !valuenode.getId().isEmpty())
+				V2N.put(valuenode, valuenode.getId());
+			else if (valuenode.getClass() != null && !valuenode.getClassname().isEmpty())
+				V2N.put(valuenode, valuenode.getClassname());
+			else if (valuenode.getParent() != null && !((DomTreeNode) valuenode.getParent()).getId().isEmpty())
+				V2N.put(valuenode, ((DomTreeNode) valuenode.getParent()).getId());
+		}
 		return matched;
 	}
 
 	private double nodeDistance(DomTreeNode node1, DomTreeNode node2) {
 		double dist = 0.0;
-		/*
+
 		DomTreeNode parent1 = node1;
 		DomTreeNode parent2 = node2;
 		while (parent1 != null && parent2 != null) {
@@ -149,17 +182,10 @@ public class PageStructure {
 			} else {
 				parent2 = (DomTreeNode) parent2.getParent();
 			}
-			diff++;
+			dist++;
 		}
-		while (parent1 != null) {
-			parent1 = (DomTreeNode) parent1.getParent();
-			diff++;
-		}
-		while (parent2 != null) {
-			parent2 = (DomTreeNode) parent2.getParent();
-			diff++;
-		}
-		*/
+		if (dist >= 3)
+			return -1.0;
 		dist += Math.abs(node1.getVWeight() - node2.getVWeight());
 		dist += node1.pf.distance(node2.pf);
 		return dist;
@@ -176,33 +202,41 @@ public class PageStructure {
 				return -1;
 			}
 		});
-		double minDist = -1;
-		DomTreeNode candidate = null;
+
 		for (DomTreeNode valuenode : valuelist) {
+			if (matched.contains(valuenode))
+				continue;
+			double minDist = -1;
+			DomTreeNode candidate = null;
 			// sombraid-based
 			for (DomTreeNode namenode : nameNodes) {
-				if (matched.contains(namenode) || valuenode.equals(namenode))
+				if (matched.contains(namenode) || valuenode.equals(namenode)
+						|| namenode.getVPath() != valuenode.getVPath())
 					continue;
 				double dist = nodeDistance(valuenode, namenode);
-				if (minDist == -1 || minDist > dist) {
+				if ((minDist == -1 || minDist > dist) && dist > 0) {
 					minDist = dist;
 					candidate = namenode;
 				}
 			}
-			V2N.put(valuenode, candidate.getContent());
-			matched.add(candidate);
+			if (candidate != null) {
+				V2N.put(valuenode, candidate.getContent());
+				matched.add(candidate);
+				matched.add(valuenode);
+			}
+
 		}
-		
+
 		return matched;
 	}
-	
+
 	private Set<DomTreeNode> value2name1(List<DomTreeNode> valuelist, Set<DomTreeNode> matched) {
 		// one-to-one
 		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
 			public int compare(DomTreeNode node1, DomTreeNode node2) {
 				if (node1.getSombraid() == node2.getSombraid())
 					return 0;
-				if (node1.getSombraid() > node2.getSombraid())
+				if (node1.getSombraid() < node2.getSombraid())
 					return 1;
 				return -1;
 			}
@@ -262,7 +296,7 @@ public class PageStructure {
 				ford++;
 			}
 		}
-		
+
 		return matched;
 	}
 

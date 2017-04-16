@@ -90,6 +90,9 @@ public class DomTreeNode extends BaseTreeNode {
 		return this.id;
 	}
 	
+	public String getClassname() {
+		return this.classname;
+	}
 	public void print() {
 		//if (this.vWeight == 0) return;
 		System.out.println("tagpath: " + this.getTagPathString());

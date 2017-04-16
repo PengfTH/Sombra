@@ -92,6 +92,7 @@ public class SchemaAnalyzer {
 		}
 
 		// potential name and value nodes	
+		/*
 		for (DomTreeNode node : pageNodes) {
 			// compare with Template Name Nodes
 			if (matched.contains(node)) {
@@ -122,6 +123,7 @@ public class SchemaAnalyzer {
 			}
 			
 		}
+		*/
 		
 
 		return true;
