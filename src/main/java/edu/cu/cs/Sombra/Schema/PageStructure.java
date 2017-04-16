@@ -124,10 +124,6 @@ public class PageStructure {
 			}
 		}
 
-		for (DomTreeNode node : valuelist) {
-			nameNodes.remove(node);
-		}
-		valueNodes.addAll(valuelist);
 		matched.addAll(this.value2name(valuelist, matched));
 		nameNodes.addAll(matched);
 		return matched;
@@ -180,7 +176,7 @@ public class PageStructure {
 		for (DomTreeNode valuenode : valuelist) {
 			// sombraid-based
 			for (DomTreeNode namenode : nameNodes) {
-				if (matched.contains(namenode)) 
+				if (matched.contains(namenode) || valuenode.equals(namenode))
 					continue;
 				double dist = nodeDistance(valuenode, namenode);
 				if (minDist == -1 || minDist > dist) {
