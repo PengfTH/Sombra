@@ -1,4 +1,4 @@
-package edu.cu.cs.Sombra.Schema;
+package edu.cu.cs.Sombra.DomTree;
 
 public class PhantomFeature {
 	

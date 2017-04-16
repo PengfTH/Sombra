@@ -17,11 +17,11 @@ import org.openqa.selenium.WebElement;
 
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
+import edu.cu.cs.Sombra.DomTree.PhantomFeature;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 import edu.cu.cs.Sombra.VisualTree.VisualTree;
 import edu.cu.cs.Sombra.VisualTree.VisualTreeNode;
 import edu.cu.cs.Sombra.util.PhantomUtil;
-
 
 public class PageStructure {
 
@@ -30,7 +30,6 @@ public class PageStructure {
 	public Set<DomTreeNode> nameNodes;
 	public Set<DomTreeNode> valueNodes;
 	public Map<DomTreeNode, String> V2N;
-	public Map<Integer, PhantomFeature> idx2pf;
 
 	public PageStructure(String htmlfile) {
 		this.DomTree = new DomTree(htmlfile);
@@ -38,7 +37,6 @@ public class PageStructure {
 		this.nameNodes = new HashSet<DomTreeNode>();
 		this.valueNodes = new HashSet<DomTreeNode>();
 		this.V2N = new HashMap<DomTreeNode, String>();
-		idx2pf = new HashMap<Integer, PhantomFeature>();
 		this.treeAlign("modified_" + htmlfile);
 	}
 
@@ -48,75 +46,64 @@ public class PageStructure {
 	private void treeAlign(String htmlfile) {
 		List<BaseTreeNode> domLeafNodes = this.DomTree.getNodes();
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
-		for (BaseTreeNode domNode : domLeafNodes) { 
+		for (BaseTreeNode domNode : domLeafNodes) {
 			int sombraid = ((DomTreeNode) domNode).getSombraid();
 			/*
-			WebElement element = this.VTree.idx2we.get(sombraid);
-			if (element != null) {
-				((DomTreeNode) domNode).setVWeight(element.getSize().getHeight() * element.getSize().getWidth());
-			} else {
-				((DomTreeNode) domNode).setVWeight(-1);
-				continue;
-			}
-			*/
-			
+			 * WebElement element = this.VTree.idx2we.get(sombraid); if (element
+			 * != null) { ((DomTreeNode)
+			 * domNode).setVWeight(element.getSize().getHeight() *
+			 * element.getSize().getWidth()); } else { ((DomTreeNode)
+			 * domNode).setVWeight(-1); continue; }
+			 */
+
 			for (BaseTreeNode vNode : vLeafNodes) {
 				List<Integer> list = ((VisualTreeNode) vNode).getSombraIds();
 				if (list.contains(sombraid)) {
 					((DomTreeNode) domNode).setVPath(((VisualTreeNode) vNode).getID());
-					((DomTreeNode) domNode).setVWeight(((VisualTreeNode) vNode).getRectHeight() * ((VisualTreeNode) vNode).getRectWidth());
+					((DomTreeNode) domNode).setVWeight(
+							((VisualTreeNode) vNode).getRectHeight() * ((VisualTreeNode) vNode).getRectWidth());
 					this.DomTree.addGoodNodes((DomTreeNode) domNode);
 					break;
 				}
 			}
-			
+
 		}
-		
+
 		Set<Integer> goodIndex = new HashSet<Integer>();
 		for (DomTreeNode good : this.DomTree.getGoodNodes()) {
 			goodIndex.add(good.getSombraid());
 		}
-		
-		//System.out.println("goodnodes size = " + goodIndex.size());
-		
+
+		// System.out.println("goodnodes size = " + goodIndex.size());
+
 		this.VTree.processPhantom(htmlfile, goodIndex);
 
 		File vfile = new File("phantom_" + htmlfile + ".json");
 		if (vfile.exists()) {
+			int index = 0;
 			try {
 				String line;
 				BufferedReader br = new BufferedReader(new FileReader(vfile));
 				while ((line = br.readLine()) != null) {
 					JSONObject obj = new JSONObject(line);
-					PhantomFeature pF = new PhantomFeature(
-											(Integer)obj.get("x"),
-											(Integer)obj.get("y"),
-											(Integer)obj.get("width"),
-											(Integer)obj.get("height"));
-					this.idx2pf.put(Integer.parseInt(obj.getString("sombraid")), pF);
-					//System.out.println(obj.getString("sombraid"));
+					while (Integer.parseInt(obj.getString("sombraid")) != this.DomTree.getGoodNodes().get(index)
+							.getSombraid()) {
+						index++;
+					}
+					PhantomFeature _pf = new PhantomFeature((Integer) obj.get("x"), (Integer) obj.get("y"),
+							(Integer) obj.get("width"), (Integer) obj.get("height"));
+					this.DomTree.getGoodNodes().get(index).pf = _pf;
+					this.DomTree.getGoodNodes().get(index).setVWeight(_pf.height * _pf.width);
+					// System.out.println(obj.getString("sombraid"));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//System.out.println("idx2pf size = " + this.idx2pf.size());
-
-			for (DomTreeNode good : this.DomTree.getGoodNodes()) {
-				int sombraid = good.getSombraid();
-				PhantomFeature pF = this.idx2pf.get(sombraid);
-				if (pF == null) {
-					good.setVWeight(0);
-				} else {
-					good.setVWeight(pF.height * pF.width);
-				}
-			}
+			// System.out.println("idx2pf size = " + this.idx2pf.size());
 		}
-		
-		
-		
-		
-		//System.out.println(this.DomTree.getGoodNodes().size());
-		//PhantomUtil.close();
+
+		// System.out.println(this.DomTree.getGoodNodes().size());
+		// PhantomUtil.close();
 	}
 
 	public DomTree getDomTree() {
@@ -144,7 +131,7 @@ public class PageStructure {
 			if (!matched.contains(node)) {
 				valuelist.add(node);
 			} else {
-				//System.out.println(node.getContent());
+				// System.out.println(node.getContent());
 			}
 		}
 
@@ -213,14 +200,13 @@ public class PageStructure {
 			int ford = pos + 1;
 			int thredDis = 30;
 			boolean ismatch = false;
-			
+
 			while (back >= 0 && ford < sombraList.size()) {
 				DomTreeNode backCandidate = sombraList.get(back);
 				DomTreeNode forwCandidate = sombraList.get(ford);
 				if (nodeDistance(backCandidate, valuenode) < nodeDistance(forwCandidate, valuenode)) {
 					if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
-							&& !matched.contains(backCandidate)
-							&& nodeDistance(backCandidate, valuenode) < thredDis) {
+							&& !matched.contains(backCandidate) && nodeDistance(backCandidate, valuenode) < thredDis) {
 						matched.add(backCandidate);
 						V2N.put(valuenode, backCandidate.getContent());
 						ismatch = true;
@@ -229,8 +215,7 @@ public class PageStructure {
 					back--;
 				} else {
 					if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
-							&& !matched.contains(forwCandidate)
-							&& nodeDistance(forwCandidate, valuenode) < thredDis) {
+							&& !matched.contains(forwCandidate) && nodeDistance(forwCandidate, valuenode) < thredDis) {
 						matched.add(forwCandidate);
 						V2N.put(valuenode, forwCandidate.getContent());
 						ismatch = true;
@@ -242,8 +227,7 @@ public class PageStructure {
 			while (!ismatch && back >= 0) {
 				DomTreeNode backCandidate = sombraList.get(back);
 				if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
-						&& !matched.contains(backCandidate)
-						&& nodeDistance(backCandidate, valuenode) < thredDis){
+						&& !matched.contains(backCandidate) && nodeDistance(backCandidate, valuenode) < thredDis) {
 					matched.add(backCandidate);
 					V2N.put(valuenode, backCandidate.getContent());
 					ismatch = true;
@@ -254,8 +238,7 @@ public class PageStructure {
 			while (!ismatch && ford < sombraList.size()) {
 				DomTreeNode forwCandidate = sombraList.get(ford);
 				if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
-						&& !matched.contains(forwCandidate)
-						&& nodeDistance(forwCandidate, valuenode) < thredDis){
+						&& !matched.contains(forwCandidate) && nodeDistance(forwCandidate, valuenode) < thredDis) {
 					matched.add(forwCandidate);
 					V2N.put(valuenode, forwCandidate.getContent());
 					ismatch = true;

@@ -18,6 +18,8 @@ public class DomTreeNode extends BaseTreeNode {
 	private String vPath;
 	private int vWeight;
 	
+	public PhantomFeature pf;
+	
 	public DomTreeNode(DomTreeNode parent, String tag, String id, String classname, String src, String content) {
 		super(parent);
 		// TODO Auto-generated constructor stub
