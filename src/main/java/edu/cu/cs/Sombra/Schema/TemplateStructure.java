@@ -47,6 +47,7 @@ public class TemplateStructure {
 					peernode = node2;
 				}
 			}
+			
 			peermap12.put(node1, peernode);
 		}
 		

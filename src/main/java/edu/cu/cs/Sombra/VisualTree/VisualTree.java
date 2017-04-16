@@ -1,9 +1,14 @@
 package edu.cu.cs.Sombra.VisualTree;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.io.FileWriter;
+
+import org.json.*;
 
 import org.fit.vips.Vips;
 import org.openqa.selenium.WebElement;
@@ -22,8 +27,8 @@ public class VisualTree extends BaseTreeNode {
 	private int windowHeight;
 	private int windowWidth;
 	private int order;
-	public Map<Integer, WebElement> idx2we;
-	
+	// public Map<Integer, WebElement> idx2we;
+
 	public VisualTree() {
 		super(null, 0);
 		this.init();
@@ -66,35 +71,69 @@ public class VisualTree extends BaseTreeNode {
 		// parse visual xml file
 		VisualTreeParser parser = new VisualTreeParser();
 		VisualTree tree = parser.parse(outputFilename + ".xml");
-		
+
+		return tree;
+	}
+
+	public void processPhantom(String filename, Set<Integer> goodIndex) {
 		// invoke phantom render and fill map
 		String currentDir = System.getProperty("user.dir");
-		//System.out.println(currentDir);
-		
+		// System.out.println(currentDir);
+
 		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
-		String fileurl = "file:" + File.separator + File.separator + currentDir + File.separator + "modified_" + filename;
+		String fileurl = "file:" + File.separator + File.separator + currentDir + File.separator + filename;
 		System.out.println(fileurl);
 		List<WebElement> elements = PhantomUtil.render(fileurl);
 		System.out.println(elements.size());
-		for (WebElement element : elements) {
-        	System.out.println(element.getText());
-            System.out.println(element.getLocation().x + ", " + element.getLocation().y);
-            System.out.println(element.getSize().width);
-            System.out.println(element.getSize().height);
-            System.out.println(element.getSize().getWidth());
-            System.out.println(element.getSize().getHeight());
-            System.out.println(element.getAttribute("sombraid"));
-            System.out.println("*******");
-        }
-		
-		for (WebElement we : elements) {
-			String idx = we.getAttribute("sombraid");
-			if (idx != null)
-				idx2we.put(Integer.parseInt(idx), we);
+
+		File ptm = new File("phantom_" + filename + ".json");
+		if (ptm.exists()) {
+		} else {
+			try {
+				ptm.createNewFile();
+				FileWriter fout = new FileWriter(ptm);
+				for (WebElement element : elements) {
+					if (element.getSize().width == 0 || element.getSize().height == 0
+							|| element.getAttribute("sombraid") == null
+							|| !goodIndex.contains(Integer.parseInt(element.getAttribute("sombraid")))) {
+						continue;
+					}
+					JSONObject obj = new JSONObject();
+					obj.put("sombraid", element.getAttribute("sombraid"));
+					obj.put("width", element.getSize().width);
+					obj.put("height", element.getSize().height);
+					obj.put("x", element.getLocation().x);
+					obj.put("y", element.getLocation().y);
+					System.out.println(obj.toString());
+					fout.write(obj.toString());
+					fout.write("\n");
+
+					/*
+					 * System.out.println(element.getText());
+					 * System.out.println(element.getLocation().x + ", " +
+					 * element.getLocation().y);
+					 * System.out.println(element.getSize().width);
+					 * System.out.println(element.getSize().height);
+					 * System.out.println(element.getSize().getWidth());
+					 * System.out.println(element.getSize().getHeight());
+					 * System.out.println(element.getAttribute("sombraid"));
+					 * System.out.println("*******");
+					 */
+				}
+				fout.close();
+
+				/*
+				 * for (WebElement we : elements) { String idx =
+				 * we.getAttribute("sombraid"); if (idx != null)
+				 * idx2we.put(Integer.parseInt(idx), we); } tree.idx2we =
+				 * idx2we;
+				 */
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		tree.idx2we = idx2we;
-		
-		return tree;
 	}
 
 	public void setPageRectHeight(int value) {
@@ -182,10 +221,10 @@ public class VisualTree extends BaseTreeNode {
 		}
 		return sb.toString();
 	}
-	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		VisualTree.getVisualTree("1.html");
-		
+		VisualTree.getVisualTree("modified_2.html");
+
 	}
 }
