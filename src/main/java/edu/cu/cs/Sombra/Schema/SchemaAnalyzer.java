@@ -145,7 +145,7 @@ public class SchemaAnalyzer {
 		}
 		
 		SchemaAnalyzer analyzer = new SchemaAnalyzer();
-		PageStructure page = new PageStructure("5.html");
+		PageStructure page = new PageStructure("3.html");
 		analyzer.debug = false;
 		if (analyzer.analyze(page, temp)) {
 			System.out.println("*****************Name Nodes*****************");
@@ -156,7 +156,7 @@ public class SchemaAnalyzer {
 			System.out.println("*****************Value Nodes*****************");
 			System.out.println(page.valueNodes.size());
 			for (DomTreeNode node : page.valueNodes) {
-				//node.print();
+				node.print();
 			}
 		} else {
 			System.out.println("No match");

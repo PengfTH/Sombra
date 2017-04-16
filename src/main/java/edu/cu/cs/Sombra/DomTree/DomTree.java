@@ -29,6 +29,8 @@ public class DomTree {
 			PrintWriter writer = new PrintWriter(output,"UTF-8");
 			
 			Document doc = Jsoup.parse(input, "UTF-8");
+			doc.getElementsByTag("script").remove();
+			doc.getElementsByTag("noscript").remove();
 			this.title = doc.title();
 			this.goodNodes = new ArrayList<DomTreeNode>();
 			
