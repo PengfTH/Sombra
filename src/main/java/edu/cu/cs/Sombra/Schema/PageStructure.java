@@ -220,7 +220,12 @@ public class PageStructure {
 				}
 			}
 			if (candidate != null) {
-				V2N.put(valuenode, candidate.getContent());
+				if (valuenode.getContent().contains(":")) {
+					V2N.put(candidate, valuenode.getContent());
+				}
+				else {
+					V2N.put(valuenode, candidate.getContent());
+				}
 				matched.add(candidate);
 				matched.add(valuenode);
 			}

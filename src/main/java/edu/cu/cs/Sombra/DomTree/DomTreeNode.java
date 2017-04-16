@@ -32,7 +32,7 @@ public class DomTreeNode extends BaseTreeNode {
 		}
 		this.tagPath.add(tag);
 		this.src = src;
-		this.content = content;
+		this.content = content.trim();
 	}
 	
 	public void setSombraid(int i) {
