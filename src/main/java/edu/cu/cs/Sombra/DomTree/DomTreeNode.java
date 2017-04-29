@@ -86,6 +86,10 @@ public class DomTreeNode extends BaseTreeNode {
 		return this.content;
 	}
 	
+	public void setContent(String s) {
+		this.content = s;
+	}
+	
 	public String getId() {
 		return this.id;
 	}

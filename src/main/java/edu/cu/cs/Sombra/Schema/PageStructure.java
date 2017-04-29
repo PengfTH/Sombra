@@ -164,6 +164,14 @@ public class PageStructure {
 			else if (valuenode.getParent() != null && !((DomTreeNode) valuenode.getParent()).getId().isEmpty())
 				V2N.put(valuenode, ((DomTreeNode) valuenode.getParent()).getId());
 		}
+		
+		for (DomTreeNode node : this.V2N.keySet()) {
+			if (this.V2N.get(node).contains(":")) {
+				String s = this.V2N.get(node).replaceAll(":", "");
+				this.V2N.put(node, s);
+			}
+		}
+		
 		return matched;
 	}
 
