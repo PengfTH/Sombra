@@ -51,13 +51,6 @@ public class PageStructure {
 		List<BaseTreeNode> vLeafNodes = this.VTree.getLeafNodes();
 		for (BaseTreeNode domNode : domLeafNodes) {
 			int sombraid = ((DomTreeNode) domNode).getSombraid();
-			/*
-			 * WebElement element = this.VTree.idx2we.get(sombraid); if (element
-			 * != null) { ((DomTreeNode)
-			 * domNode).setVWeight(element.getSize().getHeight() *
-			 * element.getSize().getWidth()); } else { ((DomTreeNode)
-			 * domNode).setVWeight(-1); continue; }
-			 */
 
 			for (BaseTreeNode vNode : vLeafNodes) {
 				List<Integer> list = ((VisualTreeNode) vNode).getSombraIds();
@@ -71,13 +64,11 @@ public class PageStructure {
 			}
 
 		}
-
+		
 		Set<Integer> goodIndex = new HashSet<Integer>();
 		for (DomTreeNode good : this.DomTree.getGoodNodes()) {
 			goodIndex.add(good.getSombraid());
 		}
-
-		// System.out.println("goodnodes size = " + goodIndex.size());
 
 		this.VTree.processPhantom(htmlfile, goodIndex);
 
@@ -168,6 +159,12 @@ public class PageStructure {
 				V2N.put(valuenode, ((DomTreeNode) valuenode.getParent()).getId());
 		}
 		
+		cleanV2N();
+		return matched;
+	}
+
+	private void cleanV2N() {
+		//only clean name node :
 		for (DomTreeNode node : this.V2N.keySet()) {
 			if (this.V2N.get(node).contains(":")) {
 				String s = this.V2N.get(node).replaceAll(":", "");
@@ -175,7 +172,6 @@ public class PageStructure {
 			}
 		}
 		
-		return matched;
 	}
 
 	private double nodeDistance(DomTreeNode node1, DomTreeNode node2) {
@@ -272,7 +268,8 @@ public class PageStructure {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PageStructure test = new PageStructure("1.html");
+		PageStructure test = new PageStructure("0001049356.html");
+		
 		// test.getDomTree().traverse();
 		/*
 		 * for (VisualTreeNode vnode : test.getV2D().keySet()) {
