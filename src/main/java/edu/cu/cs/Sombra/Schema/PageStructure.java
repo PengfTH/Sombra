@@ -15,6 +15,7 @@ import java.util.Set;
 import org.json.*;
 import org.openqa.selenium.WebElement;
 
+import edu.cu.cs.Sombra.Config;
 import edu.cu.cs.Sombra.DomTree.DomTree;
 import edu.cu.cs.Sombra.DomTree.DomTreeNode;
 import edu.cu.cs.Sombra.DomTree.PhantomFeature;
@@ -26,12 +27,14 @@ import edu.cu.cs.Sombra.util.PhantomUtil;
 public class PageStructure {
 
 	private VisualTree VTree;
+	private String url;
 	private DomTree DomTree;
 	public Set<DomTreeNode> nameNodes;
 	public Set<DomTreeNode> valueNodes;
 	public Map<DomTreeNode, String> V2N;
-
+	
 	public PageStructure(String htmlfile) {
+		this.url = htmlfile;
 		this.DomTree = new DomTree(htmlfile);
 		this.VTree = VisualTree.getVisualTree("modified_" + htmlfile);
 		this.nameNodes = new HashSet<DomTreeNode>();
@@ -78,7 +81,7 @@ public class PageStructure {
 
 		this.VTree.processPhantom(htmlfile, goodIndex);
 
-		File vfile = new File("phantom_" + htmlfile + ".json");
+		File vfile = new File(Config.TEMP_PATH + "phantom_" + htmlfile + ".json");
 		if (vfile.exists()) {
 			int index = 0;
 			try {
@@ -242,75 +245,29 @@ public class PageStructure {
 
 		return matched;
 	}
-
-	private Set<DomTreeNode> value2name1(List<DomTreeNode> valuelist, Set<DomTreeNode> matched) {
-		// one-to-one
-		Collections.sort(valuelist, new Comparator<DomTreeNode>() {
-			public int compare(DomTreeNode node1, DomTreeNode node2) {
-				if (node1.getSombraid() == node2.getSombraid())
-					return 0;
-				if (node1.getSombraid() < node2.getSombraid())
-					return 1;
-				return -1;
-			}
-		});
-		for (DomTreeNode valuenode : valuelist) {
-			// sombraid-based
-			List<DomTreeNode> sombraList = DomTree.getGoodNodes();
-			int pos = sombraList.indexOf(valuenode);
-			int back = pos - 1;
-			int ford = pos + 1;
-			int thredDis = 30;
-			boolean ismatch = false;
-
-			while (back >= 0 && ford < sombraList.size()) {
-				DomTreeNode backCandidate = sombraList.get(back);
-				DomTreeNode forwCandidate = sombraList.get(ford);
-				if (nodeDistance(backCandidate, valuenode) < nodeDistance(forwCandidate, valuenode)) {
-					if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
-							&& !matched.contains(backCandidate) && nodeDistance(backCandidate, valuenode) < thredDis) {
-						matched.add(backCandidate);
-						V2N.put(valuenode, backCandidate.getContent());
-						ismatch = true;
-						break;
-					}
-					back--;
-				} else {
-					if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
-							&& !matched.contains(forwCandidate) && nodeDistance(forwCandidate, valuenode) < thredDis) {
-						matched.add(forwCandidate);
-						V2N.put(valuenode, forwCandidate.getContent());
-						ismatch = true;
-						break;
-					}
-					ford++;
-				}
-			}
-			while (!ismatch && back >= 0) {
-				DomTreeNode backCandidate = sombraList.get(back);
-				if (backCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(backCandidate)
-						&& !matched.contains(backCandidate) && nodeDistance(backCandidate, valuenode) < thredDis) {
-					matched.add(backCandidate);
-					V2N.put(valuenode, backCandidate.getContent());
-					ismatch = true;
-					break;
-				}
-				back--;
-			}
-			while (!ismatch && ford < sombraList.size()) {
-				DomTreeNode forwCandidate = sombraList.get(ford);
-				if (forwCandidate.getVPath().equals(valuenode.getVPath()) && nameNodes.contains(forwCandidate)
-						&& !matched.contains(forwCandidate) && nodeDistance(forwCandidate, valuenode) < thredDis) {
-					matched.add(forwCandidate);
-					V2N.put(valuenode, forwCandidate.getContent());
-					ismatch = true;
-					break;
-				}
-				ford++;
-			}
+	
+	private Map<String, String> node2value() {
+		Map<String, String> N2V = new HashMap<String, String>();
+		for (DomTreeNode valuenode : V2N.keySet()) {
+			N2V.put(V2N.get(valuenode), valuenode.getContent());
 		}
-
-		return matched;
+		return N2V;
+	}
+	
+	public String generateRowString(List<String> attributes) {
+		Map<String, String> N2V = node2value();
+		StringBuilder sb = new StringBuilder();
+		for (String attribute : attributes) {
+			if (N2V.containsKey(attribute)) { 
+				sb.append(N2V.get(attribute));
+			} else {
+				sb.append("null");
+			}
+			sb.append(",");
+		}
+		sb.append(url);
+		sb.append("\n");
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {

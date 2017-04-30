@@ -129,6 +129,7 @@ public class SchemaAnalyzer {
 		return true;
 	}
 
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TemplateStructure temp = new TemplateStructure();

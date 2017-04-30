@@ -1,19 +1,18 @@
 package edu.cu.cs.Sombra.VisualTree;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.FileWriter;
-
-import org.json.*;
 
 import org.fit.vips.Vips;
+import org.json.JSONObject;
 import org.openqa.selenium.WebElement;
 
-import edu.cu.cs.Sombra.Schema.TemplateStructure;
+import edu.cu.cs.Sombra.Config;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 import edu.cu.cs.Sombra.util.PhantomUtil;
 
@@ -47,7 +46,7 @@ public class VisualTree extends BaseTreeNode {
 	}
 
 	public static VisualTree getVisualTree(String filename) {
-		String outputFilename = "VT_" + filename;
+		String outputFilename = Config.TEMP_PATH + "VT_" + filename;
 		File file = new File(outputFilename + ".xml");
 		if (!(file.exists() && !file.isDirectory())) {
 			try {
@@ -61,7 +60,7 @@ public class VisualTree extends BaseTreeNode {
 				// set permitted degree of coherence
 				vips.setPredefinedDoC(8);
 				// start segmentation on page
-				vips.startSegmentation(filename);
+				vips.startSegmentation(Config.TEMP_PATH + filename);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -81,12 +80,12 @@ public class VisualTree extends BaseTreeNode {
 		// System.out.println(currentDir);
 
 		Map<Integer, WebElement> idx2we = new HashMap<Integer, WebElement>();
-		String fileurl = "file:" + File.separator + File.separator + currentDir + File.separator + filename;
+		String fileurl = "file:" + File.separator + File.separator + currentDir + File.separator + Config.TEMP_PATH + File.separator + filename;
 		System.out.println(fileurl);
 		List<WebElement> elements = PhantomUtil.render(fileurl);
 		System.out.println(elements.size());
 
-		File ptm = new File("phantom_" + filename + ".json");
+		File ptm = new File(Config.TEMP_PATH + "phantom_" + filename + ".json");
 		if (ptm.exists()) {
 		} else {
 			try {
@@ -104,7 +103,7 @@ public class VisualTree extends BaseTreeNode {
 					obj.put("height", element.getSize().height);
 					obj.put("x", element.getLocation().x);
 					obj.put("y", element.getLocation().y);
-					System.out.println(obj.toString());
+					//System.out.println(obj.toString());
 					fout.write(obj.toString());
 					fout.write("\n");
 

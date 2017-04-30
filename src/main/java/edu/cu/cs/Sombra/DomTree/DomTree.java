@@ -3,15 +3,14 @@ package edu.cu.cs.Sombra.DomTree;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import edu.cu.cs.Sombra.Config;
 import edu.cu.cs.Sombra.Tree.BaseTreeNode;
 
 public class DomTree {
@@ -24,8 +23,8 @@ public class DomTree {
 	public DomTree(String filename) {
 		
 		try {
-			File input = new File(filename);
-			File output = new File("modified_" + filename);
+			File input = new File(Config.FILE_PATH + filename);
+			File output = new File(Config.TEMP_PATH + "modified_" + filename);
 			PrintWriter writer = new PrintWriter(output,"UTF-8");
 			
 			Document doc = Jsoup.parse(input, "UTF-8");

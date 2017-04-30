@@ -23,5 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/vips"/>
+	<classpathentry kind="lib" path="/Users/feipeng/Downloads/selenium-server-standalone-3.3.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
