@@ -2,6 +2,7 @@
 *.html
 *.txt
 *.json
+*.zip
 *.html.xml
 *.log
 /bin/*
